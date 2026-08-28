@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://presencia.net.pe/sitemap.xml
