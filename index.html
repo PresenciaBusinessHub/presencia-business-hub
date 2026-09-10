@@ -911,6 +911,24 @@ body {
   .pbh-premium-form fieldset label.full{grid-column:auto;}
 }
 </style>
+
+<style id="pbh-request-modal-v107">
+/* v107: Premium request/payment content only inside modal */
+#pbhRequestModal{display:none!important;}
+#pbhRequestModal.pbh-modal-visible{display:grid!important;}
+#pbhRequestModal .pbh-modal-close{
+  position:absolute!important;top:10px!important;right:12px!important;
+  width:36px!important;height:36px!important;border-radius:50%!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  background:#f2f5f8!important;color:#24364d!important;font:500 24px/1 Inter,Arial,sans-serif!important;
+  border:1px solid #dce4ec!important;z-index:4!important;
+}
+#pbhRequestModal .pbh-modal-close:hover{background:#e7edf3!important;color:#06182a!important;}
+#pbhRequestModal .pbh-modal{max-height:calc(100vh - 32px);overflow-y:auto;}
+@media(max-width:700px){#pbhRequestModal .pbh-modal{max-height:calc(100vh - 20px);}}
+</style>
+
+<style id="pbh-request-body-v107">body.pbh-modal-open{overflow:hidden;}</style>
 </head>
 <body>
 <header class="header"><div class="container nav">
@@ -1801,7 +1819,22 @@ if (whatsappLink) {
     'luan.sanchez.gomez@gmail.com':'9ef97d7ee578c5817e95efc51862934debd486a34892bcd093daea7ca4d27740',
     'admin@presencia.pe':'f8b3648c010051c42f9fe35708e6e4ac3d91735118c083aa16423c486c26c260'
   };
-  function openModal(id){$(id).classList.remove('pbh-hidden')}; function closeModal(id){$(id).classList.add('pbh-hidden')};
+  function openModal(id){
+  const el=$(id);
+  if(!el) return;
+  el.classList.remove('pbh-hidden');
+  if(id==='pbhRequestModal') el.classList.add('pbh-modal-visible');
+  document.body.classList.add('pbh-modal-open');
+}
+function closeModal(id){
+  const el=$(id);
+  if(!el) return;
+  el.classList.add('pbh-hidden');
+  if(id==='pbhRequestModal') el.classList.remove('pbh-modal-visible');
+  const anyOpen=document.querySelector('.pbh-modal-backdrop:not(.pbh-hidden)');
+  if(!anyOpen) document.body.classList.remove('pbh-modal-open');
+}
+
   function loginSuccess(email){
     state.premium=true;
     const saved=loadPremiumDraft();
@@ -1820,6 +1853,8 @@ if (whatsappLink) {
     $('roiCurrencyToggle')?.addEventListener('change',()=>{snapshotFreeInputs(); if(state.project){renderFree(); if(state.lastFree) renderResults(state.lastFree); if(state.premium) renderPremium();}});
     $('pbhLoginBtn').onclick=()=>openModal('pbhLoginModal'); $('pbhRequestBtn').onclick=()=>openModal('pbhRequestModal'); $('pbhLoginRequestBtn').onclick=()=>{closeModal('pbhLoginModal');openModal('pbhRequestModal')};
     document.querySelectorAll('[data-close-modal]').forEach(b=>b.addEventListener('click',()=>closeModal(b.dataset.closeModal)));
+    document.querySelectorAll('.pbh-modal-backdrop').forEach(bg=>bg.addEventListener('click',e=>{if(e.target===bg) closeModal(bg.id)}));
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.pbh-modal-backdrop:not(.pbh-hidden)').forEach(bg=>closeModal(bg.id));}});
     $('pbhLoginForm').addEventListener('submit',async e=>{e.preventDefault();const em=$('pbhLoginEmail').value.trim().toLowerCase(),pw=$('pbhLoginPassword').value;const h=await hash(pw);if(users[em]&&users[em]===h)loginSuccess(em);else $('pbhLoginError').textContent=tr('Correo o contraseña incorrectos.','Incorrect email or password.');});
     $('pbhRequestForm').addEventListener('submit',e=>{e.preventDefault();$('pbhRequestSuccess').classList.remove('pbh-hidden');});
     bindPremiumDraftPersistence();
