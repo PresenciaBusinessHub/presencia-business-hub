@@ -431,6 +431,21 @@ section[id],.trust[id]{scroll-margin-top:105px}
 
 /* Header fijo durante el desplazamiento */
 .header{position:fixed;top:0;left:0;right:0;z-index:10000;width:100%;}
+
+/* v104: Payment instructions / manual Premium activation */
+.pbh-payment-box{margin-top:22px;padding:20px;border:1px solid #dbe5f0;border-radius:18px;background:linear-gradient(180deg,#f8fbff,#ffffff);}
+.pbh-payment-title{font-size:18px;font-weight:700;color:#06111f;margin:0 0 6px}
+.pbh-payment-sub{font-size:14px;color:#5f6f83;margin:0 0 16px;line-height:1.5}
+.pbh-payment-methods{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.pbh-payment-method{background:#fff;border:1px solid #dfe6ef;border-radius:14px;padding:12px 10px;text-align:center}
+.pbh-payment-method strong{display:block;color:#17324f;font-size:13px;margin-bottom:5px}
+.pbh-payment-account{font-size:14px;color:#0e1f33;font-weight:600;word-break:break-word}
+.pbh-payment-note{margin-top:14px;padding:13px 14px;border-radius:12px;background:#fff7f2;border:1px solid #ffd9c0;color:#694225;font-size:14px;line-height:1.5}
+.pbh-payment-wa{display:inline-flex;align-items:center;gap:9px;margin-top:14px;background:#25d366;color:#fff;border:0;border-radius:12px;padding:12px 16px;font-weight:700;text-decoration:none;box-shadow:0 8px 18px rgba(37,211,102,.18)}
+.pbh-payment-wa:hover{filter:brightness(.96);transform:translateY(-1px)}
+.pbh-payment-small{display:block;margin-top:10px;font-size:12px;color:#718096}
+@media(max-width:900px){.pbh-payment-methods{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.pbh-payment-methods{grid-template-columns:1fr!important}.pbh-payment-box{padding:16px}}
 </style></style>
 <style id="pbh-fixed-nav-v103">
 body{padding-top:86px!important;}
@@ -1070,6 +1085,22 @@ body {
       <div class="pbh-premium-badge">PBH PREMIUM</div>
       <h3 id="pbhRequestTitle">Accede al análisis Premium PBH</h3>
       <p>Déjanos tus datos y revisaremos tu solicitud.</p>
+      <div class="pbh-payment-box" aria-label="Información de pago Premium">
+        <h4 class="pbh-payment-title" data-es="Pago para activar Premium" data-en="Payment to activate Premium">Pago para activar Premium</h4>
+        <p class="pbh-payment-sub" data-es="Realiza el pago por cualquiera de estos medios y conserva tu comprobante." data-en="Make your payment using any of these methods and keep your receipt.">Realiza el pago por cualquiera de estos medios y conserva tu comprobante.</p>
+        <div class="pbh-payment-methods" style="grid-template-columns:repeat(3,minmax(0,1fr));">
+          <div class="pbh-payment-method"><strong>Yape</strong><div class="pbh-payment-account">[NÚMERO YAPE]</div></div>
+          <div class="pbh-payment-method"><strong>BCP · Cuenta Soles</strong><div class="pbh-payment-account">19396012661084</div><div class="pbh-payment-small">CCI: 00219319601266108413</div></div>
+          <div class="pbh-payment-method"><strong>Interbank · Cuenta Simple Soles</strong><div class="pbh-payment-account">898 3455867438</div><div class="pbh-payment-small">CCI: 00389801345586743845</div></div>
+          <div class="pbh-payment-method"><strong>Interbank · Cuenta Simple Dólares</strong><div class="pbh-payment-account">898 3494174422</div><div class="pbh-payment-small">CCI: 00389801349417442246</div></div>
+          <div class="pbh-payment-method"><strong>Scotiabank · Ahorros Soles</strong><div class="pbh-payment-account">0560768392</div><div class="pbh-payment-small">CCI: 00923920056076839254</div></div>
+          <div class="pbh-payment-method"><strong>PayPal</strong><div class="pbh-payment-account"><a href="https://www.paypal.me/LuanSanchez867" target="_blank" rel="noopener">paypal.me/LuanSanchez867</a></div></div>
+          <div class="pbh-payment-method"><strong>SIP</strong><div class="pbh-payment-account">[NÚMERO / DATO SIP]</div></div>
+        </div>
+        <div class="pbh-payment-note" data-es="Después de realizar el pago, envíanos un mensaje por WhatsApp indicando que realizaste el pago y adjunta el comprobante para solicitar la activación de tu acceso Premium." data-en="After making the payment, send us a WhatsApp message confirming that you paid and attach the receipt to request activation of your Premium access.">Después de realizar el pago, envíanos un mensaje por WhatsApp indicando que realizaste el pago y adjunta el comprobante para solicitar la activación de tu acceso Premium.</div>
+        <a class="pbh-payment-wa" target="_blank" rel="noopener" href="https://wa.me/51933349877?text=Hola%20Presencia%20Business%20Hub%2C%20realic%C3%A9%20el%20pago%20de%20PBH%20Premium.%20Adjunto%20mi%20comprobante%20y%20solicito%20la%20activaci%C3%B3n%20de%20mi%20acceso.">💬 <span data-es="Enviar comprobante por WhatsApp" data-en="Send receipt via WhatsApp">Enviar comprobante por WhatsApp</span></a>
+        <span class="pbh-payment-small" data-es="Importante: completa el número de Yape y el dato de SIP antes de publicar." data-en="Important: complete the Yape number and SIP details before publishing.">Importante: completa el número de Yape y el dato de SIP antes de publicar.</span>
+      </div>
       <form id="pbhRequestForm" class="pbh-request-grid">
         <label>Nombre<input required></label><label>Apellido<input required></label><label>Empresa<input required></label><label>Cargo<input required></label><label>Email corporativo<input type="email" required></label><label>Teléfono<input type="tel" required></label>
         <label>Tipo de proyecto<select id="pbhRequestType"><option>Automatización / RPA</option><option>Dashboard / BI</option><option>Agente IA</option></select></label>
