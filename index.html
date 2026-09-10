@@ -430,8 +430,14 @@ section[id],.trust[id]{scroll-margin-top:105px}
 .pbh-risk{font-size:12.5px!important;padding:9px 12px!important;font-weight:400!important;}
 
 /* Header fijo durante el desplazamiento */
-.header{position:sticky;top:0;z-index:10000;width:100%;}
+.header{position:fixed;top:0;left:0;right:0;z-index:10000;width:100%;}
 </style></style>
+<style id="pbh-fixed-nav-v103">
+body{padding-top:86px!important;}
+@media(max-width:760px){body{padding-top:72px!important;}}
+html{scroll-padding-top:86px;}
+@media(max-width:760px){html{scroll-padding-top:72px;}}
+</style>
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
@@ -2352,7 +2358,7 @@ if (whatsappLink) {
   window.pbhTranslateEverything=translateAll;
 })();
 </script>
-</body></html>
+<style id="pbh-fixed-nav-v103-override">.header{position:fixed!important;top:0!important;left:0!important;right:0!important;width:100%!important;z-index:10000!important;}@media(max-width:760px){.header{height:72px!important;}}</style></body></html>
 <style id="presencia-testimonial-quotes-v79">
 /* v79: comillas pequeñas al inicio y final de cada testimonio */
 </style>
