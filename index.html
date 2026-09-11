@@ -1430,6 +1430,18 @@ img,svg,video,canvas,iframe{max-width:100%}
 }
 </style>
 
+
+<style id="pbh-free-plan-cta-style">
+.pbh-hero-plan.free{cursor:pointer;position:relative;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;background:linear-gradient(135deg,#ffffff,#f7fbff)}
+.pbh-hero-plan.free:hover{transform:translateY(-2px);border-color:#7fb2ee;box-shadow:0 12px 28px rgba(45,124,255,.14)}
+.pbh-hero-plan.free:focus-visible{outline:3px solid rgba(45,124,255,.25);outline-offset:3px}
+.pbh-hero-plan.free::after{content:'→';font-size:22px;font-weight:600;color:#2d7cff;flex:0 0 auto;line-height:1}
+@media(max-width:700px){.pbh-hero-plan.free::after{font-size:20px}.pbh-hero-plan.free{padding:13px 15px}}
+</style>
+<style id="pbh-free-target-style">
+.pbh-free-target-focus{animation:pbhFreeTargetPulse 1.1s ease}
+@keyframes pbhFreeTargetPulse{0%{box-shadow:0 0 0 0 rgba(45,124,255,.28)}100%{box-shadow:0 0 0 12px rgba(45,124,255,0)}}
+</style>
 </head>
 <body>
 <header class="header"><div class="container nav">
@@ -3352,4 +3364,4 @@ function closeModal(id){
 })();
 </script>
 
-<script>document.addEventListener('DOMContentLoaded',function(){const b=document.getElementById('pbhHeroFreePlan');const target=document.getElementById('pbhProjectGrid');if(b&&target){const go=()=>target.scrollIntoView({behavior:'smooth',block:'start'});b.addEventListener('click',go);b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});}}</script></body></html>
+<script>document.addEventListener('DOMContentLoaded',function(){const b=document.getElementById('pbhHeroFreePlan');const target=document.getElementById('pbhProjectGrid');if(b&&target){const go=()=>{target.scrollIntoView({behavior:'smooth',block:'start'});target.classList.add('pbh-free-target-focus');setTimeout(()=>target.classList.remove('pbh-free-target-focus'),1200);};b.addEventListener('click',go);b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});}});</script></body></html>
