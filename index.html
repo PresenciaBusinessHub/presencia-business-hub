@@ -1920,98 +1920,153 @@ if (whatsappLink) {
   function calculatePremium(){
     const p=collectPremium(), base=state.lastFree||calculateFree(), recurring=(Number(p.support)||0)+(Number(p.maintenance)||0)+(Number(p.infra)||0)+(Number(p.licenses)||0)+(Number(p.infraAi)||0)+(Number(p.supervision)||0); const commercial=state.project==='agent'?(Number(p.additionalSales)||0):0; const monthly=base.monthly-recurring+(commercial/12); const horizon=36; const inv=base.investment+(Number(p.development)||0)+(Number(p.integrations)||0)+(Number(p.licenses)||0)+(Number(p.training)||0); const annual=monthly*12; const roi12=inv>0?((annual-inv)/inv)*100:0; const payback=monthly>0?inv/monthly:Infinity; const tco=inv+Math.max(0,recurring)*horizon; state.premiumData={monthly,annual,roi12,payback,tco,inv,p}; renderPremiumResults(state.premiumData);
   }
-  function exportPremiumExcel(){
-    if(!state.premium){ return; }
-    if(typeof XLSX==='undefined'){
-      alert(tr('No se pudo cargar el módulo de Excel. Recarga la página e inténtalo nuevamente.','The Excel module could not be loaded. Reload the page and try again.'));
-      return;
-    }
-    const p=collectPremium();
-    const base=state.lastFree||calculateFree();
-    const d=defs[state.project]||{};
-    const wb=XLSX.utils.book_new();
-    const now=new Date();
-    const fmtDate=now.toLocaleDateString('es-PE');
-    const evalType=d.title?tr(d.title[0],d.title[1]):state.project;
-    const inv=Number(base.investment)||0;
-    const recurring=(Number(p.support)||0)+(Number(p.maintenance)||0)+(Number(p.infra)||0)+(Number(p.licenses)||0)+(Number(p.infraAi)||0)+(Number(p.supervision)||0);
-    const commercial=state.project==='agent'?(Number(p.additionalSales)||0):0;
-    const monthly=inv>=0 ? (base.monthly-recurring+(commercial/12)) : (base.monthly-recurring+(commercial/12));
-    const annual=monthly*12;
-    const roi12=inv>0?((annual-inv)/inv)*100:0;
-    const payback=monthly>0?inv/monthly:Infinity;
-    const tco=inv+Math.max(0,recurring)*36;
-    const projectNameValue=projectName();
-    const rows1=[
-      ['PRESENCIA BUSINESS HUB'],
-      ['Business Case Premium'],
-      [],
-      ['Campo','Valor'],
-      ['Proyecto',projectNameValue],
-      ['Tipo de proyecto',evalType],
-      ['Fecha de evaluación',fmtDate],
-      ['Moneda',(window.roiCurrencyCode&&window.roiCurrencyCode()==='USD')?'USD':'PEN'],
-      ['Horizonte','36 meses'],
-      [],
-      ['Indicador','Resultado'],
-      ['Inversión inicial',inv],
-      ['Beneficio mensual',monthly],
-      ['Beneficio anual',annual],
-      ['ROI 12 meses',roi12/100],
-      ['Payback',Number.isFinite(payback)?payback:'No recuperable'],
-      ['TCO 36 meses',tco],
-      ['Beneficio acumulado 36 meses',monthly*36-inv]
-    ];
-    const ws1=XLSX.utils.aoa_to_sheet(rows1);
-    ws1['!cols']=[{wch:30},{wch:26}];
-    if(ws1['B15']) ws1['B15'].z='0%';
-    XLSX.utils.book_append_sheet(wb,ws1,'Resumen Ejecutivo');
-
-    const inputRows=[['DATOS DE EVALUACIÓN'],['Campo','Valor']];
-    Object.entries(state.freeForm||{}).forEach(([k,v])=>inputRows.push([k,v]));
-    Object.entries(p||{}).forEach(([k,v])=>inputRows.push([k,v]));
-    const ws2=XLSX.utils.aoa_to_sheet(inputRows);
-    ws2['!cols']=[{wch:34},{wch:30}];
-    XLSX.utils.book_append_sheet(wb,ws2,'Datos Evaluacion');
-
-    const finance=[
-      ['MODELO FINANCIERO'],['Concepto','Valor'],
-      ['Costo/beneficio mensual base',base.monthly],
-      ['Costos recurrentes Premium',recurring],
-      ['Beneficio comercial mensual',commercial/12],
-      ['Beneficio neto mensual',monthly],
-      ['Beneficio anual',annual],
-      ['Inversión inicial',inv],
-      ['ROI 12 meses',roi12/100],
-      ['Payback',Number.isFinite(payback)?payback:'No recuperable'],
-      ['TCO 36 meses',tco],
-      ['Beneficio neto 36 meses',monthly*36-inv]
-    ];
-    const ws3=XLSX.utils.aoa_to_sheet(finance); ws3['!cols']=[{wch:34},{wch:24}]; if(ws3['B9']) ws3['B9'].z='0%'; XLSX.utils.book_append_sheet(wb,ws3,'Modelo Financiero');
-
-    const cash=[['FLUJO DE CAJA'],['Mes','Inversión','Costos recurrentes','Beneficio mensual','Flujo neto','Acumulado']];
-    let acc=-inv; cash.push([0,-inv,0,0,-inv,acc]);
-    for(let m=1;m<=36;m++){const b=monthly;const net=b;acc+=net;cash.push([m,0,-recurring,b,net,acc]);}
-    const ws4=XLSX.utils.aoa_to_sheet(cash); ws4['!cols']=[{wch:8},{wch:14},{wch:20},{wch:18},{wch:16},{wch:16}]; XLSX.utils.book_append_sheet(wb,ws4,'Flujo de Caja');
-
-    const scen=[['ESCENARIOS'],['Indicador','Pesimista','Esperado','Optimista'],['Beneficio mensual',monthly*0.7,monthly,monthly*1.3],['Beneficio anual',annual*0.7,annual,annual*1.3],['ROI 12 meses',inv>0?((monthly*12*0.7-inv)/inv):0,roi12/100,inv>0?((monthly*12*1.3-inv)/inv):0],['Payback',monthly*0.7>0?inv/(monthly*0.7):'No recuperable',Number.isFinite(payback)?payback:'No recuperable',monthly*1.3>0?inv/(monthly*1.3):'No recuperable']];
-    const ws5=XLSX.utils.aoa_to_sheet(scen); ws5['!cols']=[{wch:24},{wch:18},{wch:18},{wch:18}]; XLSX.utils.book_append_sheet(wb,ws5,'Escenarios');
-
-    const sens=[['ANÁLISIS DE SENSIBILIDAD'],['Variación del beneficio mensual','ROI 12 meses','Payback']];
-    [0.5,0.75,1,1.25,1.5].forEach(mult=>{const b=monthly*mult;const roi=inv>0?((b*12-inv)/inv)*100:0;sens.push([`${Math.round(mult*100)}%`,roi/100,b>0?inv/b:'No recuperable']);});
-    const ws6=XLSX.utils.aoa_to_sheet(sens); ws6['!cols']=[{wch:28},{wch:18},{wch:18}]; XLSX.utils.book_append_sheet(wb,ws6,'Sensibilidad');
-
-    const viability=[['RIESGOS Y VIABILIDAD'],['Factor','Nivel'],['Riesgo tecnológico','Medio'],['Riesgo operativo','Medio'],['Riesgo de adopción','Medio'],['Riesgo de datos','Bajo'],['Riesgo de integración','Medio'],[],['Indicador de viabilidad','Resultado'],['ROI 12 meses',roi12/100],['Payback',Number.isFinite(payback)?payback:'No recuperable'],['Beneficio mensual',monthly]];
-    const ws7=XLSX.utils.aoa_to_sheet(viability); ws7['!cols']=[{wch:30},{wch:24}]; if(ws7['B10']) ws7['B10'].z='0%'; XLSX.utils.book_append_sheet(wb,ws7,'Riesgos Viabilidad');
-
-    const detail=[['DETALLE TÉCNICO'],['Campo','Valor']];
-    Object.entries(p||{}).forEach(([k,v])=>detail.push([k,v]));
-    const ws8=XLSX.utils.aoa_to_sheet(detail); ws8['!cols']=[{wch:34},{wch:34}]; XLSX.utils.book_append_sheet(wb,ws8,'Detalle Técnico');
-
-    const filename=`PBH_Business_Case_${(projectNameValue||'Evaluacion').replace(/[^a-zA-Z0-9_-]+/g,'_')}_${Date.now()}.xlsx`;
-    XLSX.writeFile(wb,filename);
+  async function loadExcelJS(){
+    if(window.ExcelJS) return window.ExcelJS;
+    if(window.__pbhExcelJsPromise) return window.__pbhExcelJsPromise;
+    window.__pbhExcelJsPromise=new Promise((resolve,reject)=>{
+      const sc=document.createElement('script');
+      sc.src='https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js';
+      sc.onload=()=>window.ExcelJS?resolve(window.ExcelJS):reject(new Error('ExcelJS no disponible'));
+      sc.onerror=()=>reject(new Error('No se pudo cargar ExcelJS'));
+      document.head.appendChild(sc);
+    });
+    return window.__pbhExcelJsPromise;
   }
-
+  function pbhEscXml(v){
+    return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&apos;','"':'&quot;'}[c]));
+  }
+  function pbhFieldRows(){
+    const rows=[];
+    document.querySelectorAll('#pbhPremiumArea [data-pf]').forEach(el=>{
+      const wrap=el.closest('label');
+      let label=wrap?.childNodes?.[0]?.textContent?.trim()||el.dataset.pf;
+      label=label.replace(/\s+/g,' ');
+      let unit='';
+      const holder=wrap?.querySelector('.pbh-unit, .pbh-input-unit, .pbh-field-unit');
+      if(holder) unit=holder.textContent.trim();
+      if(!unit){
+        const txt=wrap?.textContent||'';
+        const m=txt.match(/(?:S\/|US\$|%|meses?|min\.?|h|hrs?\.?|usuarios?|clientes?\/mes|docs\.?\/mes|emails?\/mes|tokens\/mes|interac\.?)/i);
+        if(m) unit=m[0];
+      }
+      const value=(el.type==='number'||el.type==='range')?(Number(el.value)||0):el.value;
+      rows.push([label,value,unit]);
+    });
+    return rows;
+  }
+  function pbhCanvasChart(kind, labels, values, opts={}){
+    const canvas=document.createElement('canvas'); canvas.width=900; canvas.height=320;
+    const ctx=canvas.getContext('2d');
+    ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    const navy='#0F2742', blue='#2563EB', green='#107C41', orange='#F59E0B', red='#DC2626', grid='#E5E7EB', muted='#64748B';
+    ctx.font='600 18px Inter, Arial, sans-serif'; ctx.fillStyle=navy; ctx.fillText(opts.title||'',24,30);
+    const left=70,right=25,top=58,bottom=52,w=canvas.width-left-right,h=canvas.height-top-bottom;
+    const max=Math.max(...values.map(v=>Math.abs(Number(v)||0)),1), min=opts.min??0, maxV=opts.max??max;
+    const yScale=v=>top+h-(Number(v)-min)/(maxV-min||1)*h;
+    ctx.strokeStyle=grid; ctx.lineWidth=1;
+    for(let i=0;i<=4;i++){const y=top+h*i/4;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(left+w,y);ctx.stroke();}
+    ctx.fillStyle=muted;ctx.font='12px Inter, Arial';
+    for(let i=0;i<5;i++){const val=maxV-(maxV-min)*i/4;ctx.fillText(opts.formatY?opts.formatY(val):String(Math.round(val)),6,top+h*i/4+4);}
+    if(kind==='line'){
+      const step=w/Math.max(labels.length-1,1); ctx.strokeStyle=blue;ctx.lineWidth=4;ctx.beginPath();
+      values.forEach((v,i)=>{const x=left+i*step,y=yScale(v);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();
+      values.forEach((v,i)=>{const x=left+i*step,y=yScale(v);ctx.fillStyle=blue;ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fill();});
+      ctx.fillStyle=muted;ctx.font='12px Inter, Arial'; labels.forEach((lab,i)=>{const x=left+i*step; if(i===0||i===labels.length-1||i%6===0)ctx.fillText(lab,x-8,canvas.height-18);});
+    }else{
+      const gap=24, bw=(w-gap*(values.length+1))/values.length;
+      values.forEach((v,i)=>{const x=left+gap+i*(bw+gap),y=yScale(v),barH=Math.max(0,top+h-y);ctx.fillStyle=Array.isArray(opts.colors)&&opts.colors[i]?opts.colors[i]:green;ctx.fillRect(x,y,bw,barH);ctx.fillStyle=muted;ctx.font='12px Inter, Arial';ctx.textAlign='center';ctx.fillText(labels[i],x+bw/2,canvas.height-18);ctx.fillText(opts.formatY?opts.formatY(v):String(Math.round(v)),x+bw/2,Math.max(y-8,top+12));});ctx.textAlign='left';
+    }
+    return canvas.toDataURL('image/png');
+  }
+  function pbhFmtMoney(v,currency){
+    const n=Number(v)||0; return currency==='USD'?'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'S/ '+n.toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2});
+  }
+  async function exportPremiumExcelLegacy(){
+    if(!state.premium){ return; }
+    if(typeof XLSX==='undefined') return;
+    const p=collectPremium(); const base=state.lastFree||calculateFree(); const d=defs[state.project]||{}; const wb=XLSX.utils.book_new(); const now=new Date(); const fmtDate=now.toLocaleDateString('es-PE'); const evalType=d.title?tr(d.title[0],d.title[1]):state.project;
+    const inv=Number(base.investment)||0; const recurring=(Number(p.support)||0)+(Number(p.maintenance)||0)+(Number(p.infra)||0)+(Number(p.licenses)||0)+(Number(p.infraAi)||0)+(Number(p.supervision)||0); const commercial=state.project==='agent'?(Number(p.additionalSales)||0):0; const monthly=base.monthly-recurring+(commercial/12); const annual=monthly*12; const roi12=inv>0?((annual-inv)/inv)*100:0; const payback=monthly>0?inv/monthly:Infinity; const tco=inv+Math.max(0,recurring)*36;
+    const rows1=[['PRESENCIA BUSINESS HUB'],['Business Case Premium'],[],['Campo','Valor'],['Proyecto',projectName()],['Tipo de proyecto',evalType],['Fecha de evaluación',fmtDate],['Moneda',(window.roiCurrencyCode&&window.roiCurrencyCode()==='USD')?'USD':'PEN'],['Horizonte','36 meses'],[],['Indicador','Resultado'],['Inversión inicial',inv],['Beneficio mensual',monthly],['Beneficio anual',annual],['ROI 12 meses',roi12/100],['Payback',Number.isFinite(payback)?payback:'No recuperable'],['TCO 36 meses',tco],['Beneficio acumulado 36 meses',monthly*36-inv]];
+    const ws1=XLSX.utils.aoa_to_sheet(rows1); ws1['!cols']=[{wch:30},{wch:26}]; if(ws1.B15)ws1.B15.z='0%'; XLSX.utils.book_append_sheet(wb,ws1,'Resumen Ejecutivo');
+    const inputRows=[['DATOS DE EVALUACIÓN'],['Campo','Valor']]; Object.entries(state.freeForm||{}).forEach(([k,v])=>inputRows.push([k,v])); Object.entries(p||{}).forEach(([k,v])=>inputRows.push([k,v])); const ws2=XLSX.utils.aoa_to_sheet(inputRows); ws2['!cols']=[{wch:34},{wch:30}]; XLSX.utils.book_append_sheet(wb,ws2,'Datos Evaluacion');
+    const filename=`PBH_Business_Case_${(projectName()||'Evaluacion').replace(/[^a-zA-Z0-9_-]+/g,'_')}_${Date.now()}.xlsx`; XLSX.writeFile(wb,filename);
+  }
+  async function exportPremiumExcel(){
+    if(!state.premium){ return; }
+    try{
+      const ExcelJS=await loadExcelJS();
+      const p=collectPremium();
+      calculatePremium();
+      const r=state.premiumData||{};
+      const base=state.lastFree||calculateFree();
+      const currency=(window.roiCurrencyCode&&window.roiCurrencyCode()==='USD')?'USD':'PEN';
+      const symbol=currency==='USD'?'US$':'S/';
+      const typeKey=state.project;
+      const d=defs[typeKey]||{};
+      const typeName=d.title?tr(d.title[0],d.title[1]):typeKey;
+      const now=new Date();
+      const project=projectName()||tr('Evaluación Premium','Premium Evaluation');
+      const wb=new ExcelJS.Workbook();
+      wb.creator='Presencia Business Hub'; wb.company='Presencia Business Hub'; wb.subject='Business Case Premium'; wb.title=`PBH Business Case - ${project}`; wb.created=now; wb.modified=now;
+      const navy='0F2742', blue='2563EB', orange='FF6A00', green='107C41', lightBlue='EAF2FF', light='F5F7FB', line='D9E2EC', white='FFFFFF', gray='64748B', red='C62828', amber='D97706';
+      const argb=h=>({argb:'FF'+String(h).replace('#','')});
+      const moneyFmt=currency==='USD'?'$#,##0.00;[Red]($#,##0.00);-':'"S/ "#,##0.00;[Red]("S/ "#,##0.00);-';
+      const pctFmt='0.0%;[Red](0.0%);-'; const numFmt='#,##0.0;[Red](#,##0.0);-';
+      const setTab=ws=>{ws.properties.tabColor=blue; ws.views=[{showGridLines:false,zoomScale:90}]; ws.pageSetup={orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0};};
+      const styleTitle=(ws,range,text)=>{ws.mergeCells(range);const c=ws.getCell(range.split(':')[0]);c.value=text;c.font={name:'Aptos Display',size:18,bold:true,color:argb(white)};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:navy}};c.alignment={vertical:'middle',horizontal:'left'};ws.getRow(c.row).height=28;};
+      const styleHeader=row=>{row.eachCell(c=>{c.fill={type:'pattern',pattern:'solid',fgColor:{argb:navy}};c.font={name:'Aptos',size:10,bold:true,color:argb(white)};c.alignment={vertical:'middle',horizontal:'center',wrapText:true};c.border={bottom:{style:'thin',color:{argb:line}}};});};
+      const addKpi=(ws,addr,label,value,fillColor=white,valueColor=navy,fmt)=>{const [a,b]=addr.split(':');ws.mergeCells(addr);const start=ws.getCell(a);const row=start.row,col=start.col;start.value=`${label}\n${value}`;start.font={name:'Aptos',size:14,bold:true,color:argb(valueColor)};start.alignment={vertical:'middle',horizontal:'center',wrapText:true};start.fill={type:'pattern',pattern:'solid',fgColor:{argb:fillColor}};start.border={top:{style:'thin',color:{argb:line}},bottom:{style:'thin',color:{argb:line}},left:{style:'thin',color:{argb:line}},right:{style:'thin',color:{argb:line}}};ws.getRow(row).height=52;};
+      // 1. Resumen Ejecutivo / Dashboard
+      const dash=wb.addWorksheet('Resumen Ejecutivo'); setTab(dash); dash.columns=[{width:18},{width:14},{width:14},{width:18},{width:14},{width:14},{width:14},{width:14},{width:14},{width:14},{width:14},{width:14},{width:14},{width:14}];
+      styleTitle(dash,'A1:N1','PRESENCIA BUSINESS HUB'); dash.getCell('A2').value='Business Case Premium • Dashboard ejecutivo de la evaluación'; dash.mergeCells('A2:N2'); dash.getCell('A2').font={name:'Aptos',size:12,color:argb(gray)};
+      dash.getCell('A4').value='Proyecto'; dash.getCell('B4').value=project; dash.getCell('E4').value='Tipo'; dash.getCell('F4').value=typeName; dash.getCell('I4').value='Fecha'; dash.getCell('J4').value=now; dash.getCell('L4').value='Moneda / Horizonte'; dash.getCell('M4').value=`${currency} • 36 meses`; ['A4','E4','I4','L4'].forEach(a=>{dash.getCell(a).font={bold:true,color:argb(navy)};}); dash.getCell('J4').numFmt='dd/mm/yyyy';
+      addKpi(dash,'A7:C9','INVERSIÓN INICIAL',pbhFmtMoney(r.inv,currency),lightBlue,navy); addKpi(dash,'D7:F9','BENEFICIO MENSUAL',pbhFmtMoney(r.monthly,currency),lightBlue,r.monthly<0?red:green); addKpi(dash,'G7:I9','ROI 12 MESES',`${r.roi12.toFixed(1)}%`,lightBlue,r.roi12<0?red:green); addKpi(dash,'J7:L9','PAYBACK',Number.isFinite(r.payback)?`${r.payback.toFixed(1)} meses`:'No recuperable',lightBlue,r.payback===Infinity?red:navy); addKpi(dash,'M7:N9','VIABILIDAD',r.roi12<0?'LIMITADA':r.roi12<25?'MODERADA':'ALTA',r.roi12<0?'FDECEC':r.roi12<25?'FFF4E5':'E8F5E9',r.roi12<0?red:r.roi12<25?amber:green);
+      addKpi(dash,'A11:C13','BENEFICIO ANUAL',pbhFmtMoney(r.annual,currency),white,navy); addKpi(dash,'D11:F13','TCO 36 MESES',pbhFmtMoney(r.tco,currency),white,navy); addKpi(dash,'G11:I13','BENEFICIO ACUMULADO',pbhFmtMoney(r.monthly*36-r.inv,currency),white,(r.monthly*36-r.inv)<0?red:green); addKpi(dash,'J11:L13','HORIZONTE','36 meses',white,navy); addKpi(dash,'M11:N13','MODELO',typeName,white,navy);
+      dash.mergeCells('A15:N16'); dash.getCell('A15').value=r.roi12<0?'🔴 PROYECTO NO RECOMENDADO':r.roi12<25?'🟠 VIABILIDAD MODERADA':'🟢 PROYECTO RECOMENDADO'; dash.getCell('A15').font={name:'Aptos Display',size:18,bold:true,color:argb(r.roi12<0?red:r.roi12<25?amber:green)}; dash.getCell('A15').alignment={vertical:'middle',horizontal:'center'}; dash.getCell('A15').fill={type:'pattern',pattern:'solid',fgColor:{argb:'F8FAFC'}};
+      dash.mergeCells('A17:N18'); dash.getCell('A17').value=r.roi12<0?'Con los supuestos ingresados, la inversión no recupera su costo dentro del periodo analizado.':r.roi12<25?'Existe una oportunidad, pero conviene validar supuestos, costos y riesgos antes de invertir.':'La relación entre inversión, costos y beneficios es favorable bajo estos supuestos.'; dash.getCell('A17').font={name:'Aptos',size:11,color:argb(gray)}; dash.getCell('A17').alignment={wrapText:true,vertical:'middle'};
+      const cashVals=[-r.inv]; let acc=-r.inv; const labels=['0']; for(let m=1;m<=36;m++){acc+=r.monthly;cashVals.push(acc);labels.push(String(m));}
+      const lineB64=pbhCanvasChart('line',labels,cashVals,{title:'Flujo de caja acumulado',formatY:v=>pbhFmtMoney(v,currency)}); const scenNames=['Pesimista','Esperado','Optimista']; const mults=[0.7,1,1.25]; const roiVals=mults.map(m=>r.inv>0?((r.monthly*m*12-r.inv)/r.inv)*100:0); const barB64=pbhCanvasChart('bar',scenNames,roiVals,{title:'ROI por escenario',formatY:v=>`${v.toFixed(0)}%`,min:Math.min(0,...roiVals),colors:[red,blue,green]});
+      const img1=wb.addImage({base64:lineB64,extension:'png'}); dash.addImage(img1,'A20:G35'); const img2=wb.addImage({base64:barB64,extension:'png'}); dash.addImage(img2,'H20:N35');
+      dash.mergeCells('A37:N40'); dash.getCell('A37').value='Nota PBH: Los resultados son estimaciones basadas en los supuestos ingresados. Revise escenarios, sensibilidad y riesgos antes de tomar una decisión de inversión.'; dash.getCell('A37').font={name:'Aptos',size:10,color:argb(gray),italic:true}; dash.getCell('A37').alignment={wrapText:true,vertical:'middle'};
+      // 2. Datos de evaluación
+      const dataWs=wb.addWorksheet('Datos Evaluacion'); setTab(dataWs); styleTitle(dataWs,'A1:D1','DATOS DE EVALUACIÓN'); dataWs.getRange?null:null;
+      dataWs.addRow(['Categoría','Campo','Valor','Unidad']); styleHeader(dataWs.getRow(2));
+      const baseRows=[['General','Tipo de proyecto',typeName,''],['General','Moneda',currency,currency==='USD'?'US$':'S/'],['General','Horizonte de análisis',36,'meses']];
+      (window.pbhFreeFieldRows?window.pbhFreeFieldRows():[]).forEach(x=>baseRows.push(x));
+      pbhFieldRows().forEach(x=>baseRows.push(['Premium',x[0],x[1],x[2]]));
+      baseRows.forEach(rw=>dataWs.addRow(rw)); dataWs.columns=[{width:20},{width:34},{width:30},{width:18}]; dataWs.addTable({name:'PBHDataTable',ref:`A2:D${dataWs.rowCount}`,style:{theme:'TableStyleMedium2',showRowStripes:true},columns:[{name:'Categoría'},{name:'Campo'},{name:'Valor'},{name:'Unidad'}],rows:dataWs.getRows(3,dataWs.rowCount-2).map(rr=>rr.values.slice(1))}); dataWs.views=[{showGridLines:false,state:'frozen',ySplit:2}];
+      // 3. Modelo financiero
+      const fin=wb.addWorksheet('Modelo Financiero'); setTab(fin); styleTitle(fin,'A1:D1','MODELO FINANCIERO'); fin.addRow(['Categoría','Indicador','Valor','Unidad']); styleHeader(fin.getRow(2));
+      const finRows=[['Operación','Costo/beneficio mensual base',base.monthly,`${symbol}/mes`],['Costos','Costos recurrentes Premium',r.tco>0?((Number(p.support)||0)+(Number(p.maintenance)||0)+(Number(p.infra)||0)+(Number(p.licenses)||0)+(Number(p.infraAi)||0)+(Number(p.supervision)||0)):0,`${symbol}/mes`],['Beneficios','Beneficio comercial mensual',typeKey==='agent'?(Number(p.additionalSales)||0)/12:0,`${symbol}/mes`],['Resultados','Beneficio neto mensual',r.monthly,`${symbol}/mes`],['Resultados','Beneficio anual',r.annual,`${symbol}/año`],['Inversión','Inversión inicial',r.inv,symbol],['Resultados','ROI 12 meses',r.roi12/100,'%'],['Resultados','Payback',Number.isFinite(r.payback)?r.payback:null,'meses'],['Costos','TCO 36 meses',r.tco,symbol],['Resultados','Beneficio neto 36 meses',r.monthly*36-r.inv,symbol]]; finRows.forEach(row=>fin.addRow(row)); fin.columns=[{width:18},{width:34},{width:22},{width:16}]; fin.addTable({name:'PBHFinanceTable',ref:`A2:D${fin.rowCount}`,style:{theme:'TableStyleMedium2',showRowStripes:true},columns:[{name:'Categoría'},{name:'Indicador'},{name:'Valor'},{name:'Unidad'}],rows:fin.getRows(3,fin.rowCount-2).map(rr=>rr.values.slice(1))}); fin.views=[{showGridLines:false,state:'frozen',ySplit:2}];
+      // 4. Flujo de caja
+      const cashWs=wb.addWorksheet('Flujo de Caja'); setTab(cashWs); styleTitle(cashWs,'A1:F1','FLUJO DE CAJA • 36 MESES'); cashWs.addRow(['Mes',`Inversión (${currency})`,`Costos recurrentes (${currency})`,`Beneficio mensual (${currency})`,`Flujo neto (${currency})`,`Acumulado (${currency})`]); styleHeader(cashWs.getRow(2)); let acc2=-r.inv; cashWs.addRow([0,-r.inv,0,0,-r.inv,acc2]); const rec=(Number(p.support)||0)+(Number(p.maintenance)||0)+(Number(p.infra)||0)+(Number(p.licenses)||0)+(Number(p.infraAi)||0)+(Number(p.supervision)||0); for(let m=1;m<=36;m++){const net=r.monthly; acc2+=net; cashWs.addRow([m,0,-rec,r.monthly,net,acc2]);} cashWs.columns=[{width:10},{width:20},{width:24},{width:24},{width:20},{width:20}]; cashWs.addTable({name:'PBHCashTable',ref:`A2:F${cashWs.rowCount}`,style:{theme:'TableStyleMedium2',showRowStripes:true},columns:[{name:'Mes'},{name:`Inversión (${currency})`},{name:`Costos recurrentes (${currency})`},{name:`Beneficio mensual (${currency})`},{name:`Flujo neto (${currency})`},{name:`Acumulado (${currency})`}],rows:cashWs.getRows(3,cashWs.rowCount-2).map(rr=>rr.values.slice(1))}); cashWs.views=[{showGridLines:false,state:'frozen',ySplit:2}];
+      // 5. Escenarios
+      const scenWs=wb.addWorksheet('Escenarios'); setTab(scenWs); styleTitle(scenWs,'A1:E1','ESCENARIOS DE RESULTADO'); scenWs.addRow(['Indicador','Pesimista','Esperado','Optimista','Unidad']); styleHeader(scenWs.getRow(2)); mults.forEach(()=>{}); const sm=mults.map(m=>r.monthly*m); scenWs.addRows([['Beneficio mensual',...sm,`${symbol}/mes`],['Beneficio anual',...sm.map(v=>v*12),`${symbol}/año`],['ROI 12 meses',...sm.map(v=>r.inv>0?((v*12-r.inv)/r.inv):0),'%'],['Payback',...sm.map(v=>v>0?r.inv/v:null),'meses']]); scenWs.columns=[{width:28},{width:18},{width:18},{width:18},{width:16}]; scenWs.addTable({name:'PBHScenarioTable',ref:`A2:E${scenWs.rowCount}`,style:{theme:'TableStyleMedium2',showRowStripes:true},columns:[{name:'Indicador'},{name:'Pesimista'},{name:'Esperado'},{name:'Optimista'},{name:'Unidad'}],rows:scenWs.getRows(3,scenWs.rowCount-2).map(rr=>rr.values.slice(1))});
+      // 6. Sensibilidad
+      const sensWs=wb.addWorksheet('Sensibilidad'); setTab(sensWs); styleTitle(sensWs,'A1:D1','ANÁLISIS DE SENSIBILIDAD'); sensWs.addRow(['Variación del beneficio mensual','ROI 12 meses','Payback','Lectura']); styleHeader(sensWs.getRow(2)); [0.5,0.75,1,1.25,1.5].forEach(mult=>{const b=r.monthly*mult;const roi=r.inv>0?((b*12-r.inv)/r.inv):0; sensWs.addRow([`${Math.round(mult*100)}%`,roi,b>0?r.inv/b:null,b>0?'Recuperable':'No recuperable']);}); sensWs.columns=[{width:28},{width:18},{width:18},{width:24}]; sensWs.addTable({name:'PBHSensitivityTable',ref:`A2:D${sensWs.rowCount}`,style:{theme:'TableStyleMedium2',showRowStripes:true},columns:[{name:'Variación del beneficio mensual'},{name:'ROI 12 meses'},{name:'Payback'},{name:'Lectura'}],rows:sensWs.getRows(3,sensWs.rowCount-2).map(rr=>rr.values.slice(1))});
+      // 7. Riesgos
+      const riskWs=wb.addWorksheet('Riesgos Viabilidad'); setTab(riskWs); styleTitle(riskWs,'A1:D1','RIESGOS Y VIABILIDAD'); riskWs.addRow(['Factor de riesgo','Nivel','Implicancia','Acción sugerida']); styleHeader(riskWs.getRow(2)); const risks=[['Riesgo tecnológico','Medio','Dependencia de la solución e integración','Validar arquitectura y APIs'],['Riesgo operativo','Medio','Cambios en el proceso actual','Definir transición y responsables'],['Riesgo de adopción','Medio','Uso efectivo por usuarios','Plan de capacitación y acompañamiento'],['Riesgo de datos','Bajo','Calidad y disponibilidad de datos','Validar fuentes y controles'],['Riesgo de integración','Medio','Dependencias con sistemas externos','Realizar pruebas de integración']]; risks.forEach(x=>riskWs.addRow(x)); riskWs.addRow([]); riskWs.addRow(['Indicador de viabilidad','Resultado','','']); const idx=Math.max(0,Math.min(100,Math.round(50+r.roi12/4-(r.payback===Infinity?25:Math.max(0,r.payback-6)*2)))); riskWs.addRow(['Índice PBH',idx,'/100','']); riskWs.columns=[{width:28},{width:18},{width:38},{width:38}]; riskWs.addTable({name:'PBHRiskTable',ref:'A2:D7',style:{theme:'TableStyleMedium2',showRowStripes:true},columns:[{name:'Factor de riesgo'},{name:'Nivel'},{name:'Implicancia'},{name:'Acción sugerida'}],rows:riskWs.getRows(3,7).map(rr=>rr.values.slice(1))});
+      // 8. Detalle Técnico
+      const detWs=wb.addWorksheet('Detalle Técnico'); setTab(detWs); styleTitle(detWs,'A1:D1',`DETALLE TÉCNICO • ${typeName.toUpperCase()}`); detWs.addRow(['Categoría','Campo','Valor','Unidad']); styleHeader(detWs.getRow(2)); pbhFieldRows().forEach(x=>detWs.addRow(['Premium',x[0],x[1],x[2]])); detWs.columns=[{width:20},{width:36},{width:32},{width:18}]; detWs.addTable({name:'PBHTechTable',ref:`A2:D${detWs.rowCount}`,style:{theme:'TableStyleMedium2',showRowStripes:true},columns:[{name:'Categoría'},{name:'Campo'},{name:'Valor'},{name:'Unidad'}],rows:detWs.getRows(3,detWs.rowCount-2).map(rr=>rr.values.slice(1))}); detWs.views=[{showGridLines:false,state:'frozen',ySplit:2}];
+      // Format all sheets
+      for(const ws of wb.worksheets){
+        ws.eachRow(row=>row.eachCell(cell=>{cell.font={name:'Aptos',size:10,color:cell.font?.color||'1F2937',bold:cell.font?.bold||false}; cell.alignment=cell.alignment||{vertical:'middle'};}));
+      }
+      // Apply number formats and colors to numeric columns
+      [fin,cashWs,scenWs,sensWs,riskWs].forEach(ws=>{
+        ws.eachRow((row,rowNum)=>{row.eachCell((cell,colNum)=>{if(typeof cell.value==='number') cell.numFmt=cell.numFmt||numFmt; if(typeof cell.value==='number' && cell.value<0) cell.font={name:'Aptos',size:10,color:argb(red)};});});
+      });
+      fin.getColumn(3).eachCell((c,rn)=>{if(rn>2)c.numFmt=rn===8?pctFmt:(rn===9?'0.0':'#,##0.00;[Red](#,##0.00);-');});
+      scenWs.getRow(5).eachCell((c)=>{if(c.column>1)c.numFmt=pctFmt;}); scenWs.getRow(6).eachCell((c)=>{if(c.column>1)c.numFmt='0.0';});
+      sensWs.eachRow((row,rn)=>{if(rn>2){row.getCell(2).numFmt=pctFmt;row.getCell(3).numFmt='0.0';}});
+      cashWs.eachRow((row,rn)=>{if(rn>2){for(let c=2;c<=6;c++)row.getCell(c).numFmt=moneyFmt;}});
+      dataWs.eachRow((row,rn)=>{if(rn>2 && typeof row.getCell(3).value==='number')row.getCell(3).numFmt=numFmt;}); detWs.eachRow((row,rn)=>{if(rn>2 && typeof row.getCell(3).value==='number')row.getCell(3).numFmt=numFmt;});
+      const fileName=`PBH_Business_Case_${project.replace(/[^a-zA-Z0-9_-]+/g,'_')}_${Date.now()}.xlsx`;
+      const buffer=await wb.xlsx.writeBuffer();
+      const blob=new Blob([buffer],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=fileName; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000);
+    }catch(err){console.error(err); try{await exportPremiumExcelLegacy();}catch(_){alert(tr('No se pudo generar el Excel Premium. Verifica tu conexión e inténtalo nuevamente.','The Premium Excel could not be generated. Check your connection and try again.'));}}
+  }
   function renderPremiumResults(r){
     const s=r.monthly; const scenarios=[['Pesimista',.7],['Esperado',1],['Optimista',1.25]]; const rows=scenarios.map(([n,m])=>{const sm=s*m,a=sm*12,roi=r.inv?((a-r.inv)/r.inv)*100:0,pb=sm>0?r.inv/sm:Infinity;return {n,sm,a,roi,pb}});
     $('pbhPremiumKpis').innerHTML=`<div class="pbh-premium-mini"><strong>ROI 12M</strong><span class="${r.roi12<0?'pbh-neg':''}">${(r.roi12>=0?'+':'')+r.roi12.toFixed(0)}%</span><small>${esc(tr('Retorno sobre la inversión','Return on investment'))}</small></div><div class="pbh-premium-mini"><strong>PAYBACK</strong><span>${r.payback===Infinity?esc(tr('No recuperable','Not recoverable')):r.payback.toFixed(1)+' '+esc(tr('meses','months'))}</span><small>${esc(tr('Recuperación estimada','Estimated recovery'))}</small></div><div class="pbh-premium-mini"><strong>${esc(tr('Beneficio mensual','Monthly benefit'))}</strong><span class="${r.monthly<0?'pbh-neg':''}">${money(r.monthly)}</span><small>${esc(tr('Resultado neto después de costos recurrentes','Net result after recurring costs'))}</small></div><div class="pbh-premium-mini"><strong>TCO 36M</strong><span>${money(r.tco)}</span><small>${esc(tr('Costo total de propiedad','Total cost of ownership'))}</small></div>`;
