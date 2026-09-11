@@ -1906,18 +1906,20 @@ if (whatsappLink) {
     const shell=area.querySelector('.pbh-premium-shell'); if(!shell) return;
     const formWrap=$('pbhPremiumFormWrap');
     const fieldsets=[...formWrap.querySelectorAll('fieldset')];
-    const stageFields=[
-      [0],                 // 01 situation
-      [1],                 // 02 solution / operational detail
-      [fieldsets.length-1],// 03 project costs
-      [2],                 // 04 benefits / quality-impact detail
-      [],[],[],[]
-    ];
-    fieldsets.forEach(fs=>{fs.removeAttribute('data-pbh-stage');});
-    const stageForFieldset=new Map();
-    stageFields.forEach((arr,stage)=>arr.forEach(idx=>{if(fieldsets[idx]) stageForFieldset.set(fieldsets[idx],stage);}));
-    // project costs are last; keep all other fieldsets assigned to nearby business-case stages
-    fieldsets.forEach((fs,idx)=>{ if(!stageForFieldset.has(fs)) stageForFieldset.set(fs, idx===0?0:Math.min(3,idx)); fs.dataset.pbhStage=String(stageForFieldset.get(fs)); });
+    // Distribución clara del Business Case en 4 etapas de captura:
+    // 01 Situación actual = primer bloque
+    // 02 Solución = segundo bloque
+    // 03 Costos = último bloque (costos del proyecto) y, para Agentes IA, el bloque de costos IA
+    // 04 Beneficios = bloques restantes de calidad/impacto
+    const costIndex = Math.max(0, fieldsets.length - 1);
+    fieldsets.forEach((fs,idx)=>{
+      let stage = 3;
+      if(idx === 0) stage = 0;
+      else if(idx === 1) stage = 1;
+      else if(idx === costIndex) stage = 2;
+      else if(state.project === 'agent' && idx === 2) stage = 2;
+      fs.dataset.pbhStage = String(stage);
+    });
 
     const results=area.querySelector('.pbh-premium-results');
     const resultChildren=results?[...results.children]:[];
@@ -1957,12 +1959,22 @@ if (whatsappLink) {
       if(step===3 && calc){ calc.onclick=()=>{savePremiumDraft();calculatePremium();state.premiumCurrentStep=4;savePremiumDraft();go(4);}; }
       shell.scrollIntoView({behavior:'smooth',block:'start'});
     };
-    area.querySelectorAll('.pbh-step-pill').forEach(btn=>btn.addEventListener('click',()=>go(Number(btn.dataset.pbhStep))));
+    // Navegación por delegación para que los pasos sigan funcionando aunque el bloque Premium se regenere.
+    const stepper = shell.querySelector('.pbh-stepper');
+    if(stepper){
+      stepper.onclick = (ev)=>{
+        const btn = ev.target.closest('.pbh-step-pill');
+        if(!btn || btn.disabled) return;
+        ev.preventDefault();
+        go(Number(btn.dataset.pbhStep));
+      };
+    }
     const prev=$('pbhStagePrev'), next=$('pbhStageNext');
     if(prev) prev.onclick=()=>go((state.premiumCurrentStep||0)-1);
     if(next) next.onclick=()=>{const s=state.premiumCurrentStep||0; if(s===3){savePremiumDraft();calculatePremium();go(4);} else go(s+1);};
     go(state.premiumData?Math.min(7,state.premiumCurrentStep||0):Math.min(3,state.premiumCurrentStep||0));
-  }\n
+  }
+
   function renderPremium(){
     const area=$('pbhPremiumArea');
     const common=`<fieldset><legend>${tr('Costos del proyecto','Project costs')}</legend><label>${tr('Desarrollo','Development')}<input type="number" data-pf="development" value="0" min="0"></label><label>${tr('Integraciones','Integrations')}<input type="number" data-pf="integrations" value="0" min="0"></label><label>${tr('Licencias','Licences')}<input type="number" data-pf="licenses" value="0" min="0"></label><label>${tr('Infraestructura','Infrastructure')}<input type="number" data-pf="infra" value="0" min="0"></label><label>${tr('Capacitación','Training')}<input type="number" data-pf="training" value="0" min="0"></label><label>${tr('Mantenimiento mensual','Monthly maintenance')}<input type="number" data-pf="maintenance" value="0" min="0"></label><label>${tr('Soporte mensual','Monthly support')}<input type="number" data-pf="support" value="0" min="0"></label><label>${tr('Tiempo de implementación (meses)','Implementation time (months)')}<input type="number" data-pf="implementation" value="1" min="0" step="0.5"></label></fieldset>`;
