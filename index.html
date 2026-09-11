@@ -803,6 +803,8 @@ body {
 .pbh-price-amount{position:relative;z-index:1;flex:0 0 auto;text-align:right;padding-left:10px}
 .pbh-price-main{display:block;color:#fff;font-size:31px;line-height:1;font-weight:900;letter-spacing:-.04em;white-space:nowrap}
 .pbh-price-secondary{display:block;margin-top:7px;color:#ffd3b3;font-size:11px;font-weight:800;white-space:nowrap}
+.pbh-price-title .pbh-old-price,.pbh-price-secondary .pbh-old-price{text-decoration-line:line-through;text-decoration-thickness:2px;text-decoration-color:currentColor;text-decoration-skip-ink:none;opacity:.82}
+
 .pbh-price-badge{display:inline-flex;align-items:center;justify-content:center;margin-top:9px;padding:5px 9px;border-radius:999px;background:#ff6a00;color:#fff;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
 @media(max-width:700px){.pbh-price-offer{align-items:flex-start;flex-direction:column;gap:12px;padding:15px}.pbh-price-amount{text-align:left;padding-left:0}.pbh-price-main{font-size:27px}.pbh-price-secondary{font-size:10px}}
 </style>
@@ -1303,7 +1305,7 @@ body.pbh-modal-open{overflow:hidden!important;}
 @media(max-width:700px){.pbh-hero-plans{grid-template-columns:1fr;gap:10px}.pbh-hero-plan{padding:12px 14px}.pbh-hero-plan-title{font-size:15px}}
 .pbh-hero-offer{display:inline-flex;align-items:center;gap:10px;margin:16px auto 4px;padding:9px 14px;border-radius:999px;border:1px solid rgba(45,124,255,.18);background:linear-gradient(90deg,#eef5ff 0%,#fff6ef 100%);color:#14385d;font-size:12px;font-weight:700;box-shadow:0 6px 18px rgba(17,48,85,.06)}
 .pbh-calc-hero .pbh-hero-offer strong{color:#ff6a00}
-.pbh-calc-hero .pbh-hero-offer s{color:#6f7f92;font-weight:600;text-decoration-line:line-through;text-decoration-thickness:2px;text-decoration-color:#6f7f92;text-decoration-skip-ink:none;text-decoration-style:solid;text-decoration-offset:3px;opacity:.9}
+.pbh-calc-hero .pbh-hero-offer s{color:#6f7f92;font-weight:600}
 .pbh-project-icon{position:relative;width:48px;height:48px;border-radius:14px;flex:0 0 auto;display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 7px 16px rgba(18,45,75,.08)}
 .pbh-project-icon svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
 .pbh-rpa-icon{background:linear-gradient(145deg,#e9f2ff,#dceaff);color:#1a66c8}
@@ -1614,12 +1616,12 @@ img,svg,video,canvas,iframe{max-width:100%}
       <div class="pbh-price-offer" aria-label="Precio de acceso Premium">
         <div class="pbh-price-offer-copy">
           <div class="pbh-price-kicker" data-es="OFERTA ESPECIAL PBH" data-en="PBH SPECIAL OFFER">✦ <span>OFERTA ESPECIAL PBH</span></div>
-          <h4 class="pbh-price-title" data-es="Antes US$ 50 · Ahora solo US$ 20" data-en="Was US$ 50 · Now only US$ 20">Antes US$ 50 · Ahora solo US$ 20</h4>
+          <h4 class="pbh-price-title"><span data-es="Antes " data-en="Was ">Antes </span><span class="pbh-old-price">US$ 50</span><span data-es=" · Ahora solo US$ 20" data-en=" · Now only US$ 20"> · Ahora solo US$ 20</span></h4>
           <p class="pbh-price-sub" data-es="Business Case Premium por tiempo limitado · Ahorra US$ 30 (≈ PEN 105)." data-en="Premium Business Case for a limited time · Save US$ 30 (≈ PEN 105).">Business Case Premium por tiempo limitado · Ahorra US$ 30 (≈ PEN 105).</p>
         </div>
         <div class="pbh-price-amount">
           <span class="pbh-price-main">US$ 20</span>
-          <span class="pbh-price-secondary" data-es="Antes: US$ 50 · ≈ PEN 175 &nbsp; | &nbsp; Ahora: US$ 20 · ≈ PEN 70" data-en="Was: US$ 50 · ≈ PEN 175 &nbsp; | &nbsp; Now: US$ 20 · ≈ PEN 70">Antes: US$ 50 · ≈ PEN 175 &nbsp; | &nbsp; Ahora: US$ 20 · ≈ PEN 70</span>
+          <span class="pbh-price-secondary"><span data-es="Antes: " data-en="Was: ">Antes: </span><span class="pbh-old-price">US$ 50</span><span data-es=" · ≈ PEN 175 &nbsp; | &nbsp; Ahora: US$ 20 · ≈ PEN 70" data-en=" · ≈ PEN 175 &nbsp; | &nbsp; Now: US$ 20 · ≈ PEN 70"> · ≈ PEN 175 &nbsp; | &nbsp; Ahora: US$ 20 · ≈ PEN 70</span></span>
           <span class="pbh-price-badge" data-es="Acceso Premium · Pago único" data-en="Premium access · One-time payment">Acceso Premium · Pago único</span>
         </div>
       </div>
