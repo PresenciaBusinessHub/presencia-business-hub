@@ -1087,18 +1087,34 @@ body.pbh-modal-open{overflow:hidden!important;}
 /* v112: units aligned to the far right of Premium fields */
 .pbh-premium-form label.pbh-has-unit{position:relative;display:block}
 .pbh-premium-form label.pbh-has-unit input,
-.pbh-premium-form label.pbh-has-unit select{padding-right:58px!important}
+.pbh-premium-form label.pbh-has-unit select{padding-right:104px!important;box-sizing:border-box}
+.pbh-premium-form label.pbh-has-unit input[type=number]{font-variant-numeric:tabular-nums}
 .pbh-premium-form label.pbh-has-unit::after{
   content:attr(data-unit);
   position:absolute;
   right:12px;
   bottom:11px;
+  min-width:fit-content;
   color:#718096;
   font:500 10px/1 Inter,Arial,sans-serif;
   pointer-events:none;
   white-space:nowrap;
+  text-align:right;
+  background:#fff;
+  padding-left:6px;
+  z-index:2;
 }
 .pbh-premium-form label.pbh-has-unit:focus-within::after{color:#1268b4}
+@media(max-width:700px){
+  .pbh-premium-form label.pbh-has-unit input,
+  .pbh-premium-form label.pbh-has-unit select{padding-right:92px!important}
+  .pbh-premium-form label.pbh-has-unit::after{right:10px;font-size:9.5px}
+}
+@media (orientation:landscape) and (max-height:600px){
+  .pbh-premium-form label.pbh-has-unit input,
+  .pbh-premium-form label.pbh-has-unit select{padding-right:96px!important}
+  .pbh-premium-form label.pbh-has-unit::after{right:10px;font-size:9px}
+}
 /* Landscape phones/tablets: keep the navigation on one line */
 @media (orientation:landscape) and (max-height:600px) and (max-width:1100px){
   .header{height:64px;position:sticky;top:0}
@@ -1610,6 +1626,7 @@ if (whatsappLink) {
 (function(){
   const FX=3.50;
   const state={project:null, lastFree:null, premium:false, premiumData:null, freeForm:{}, premiumDrafts:{}, premiumCurrentStep:0};
+  window.pbhState = state;
   const PBH_PREMIUM_DRAFT_KEY='pbh_premium_draft_v1';
   function loadPremiumDraft(){
     try{
@@ -1890,6 +1907,7 @@ if (whatsappLink) {
     $('pbhPremiumExport').onclick=()=>{savePremiumDraft();exportPremiumExcel();};
     bindPremiumDraftPersistence();
     updatePremium();
+    if(window.pbhApplyPremiumUnits) setTimeout(window.pbhApplyPremiumUnits,0);
   }
   function collectPremium(){
     const out={};
@@ -2749,11 +2767,18 @@ function closeModal(id){
   function unitFor(id){
     const p=currentProject();
     const map=UNIT_MAP[p]||{};
-    const u=map[id];
-    if(!u)return '';
+    let u=map[id]||'';
+    if(!u){
+      const fallbacks={
+        steps:'pasos',exceptions:'excep./mes',humanIntervention:'%',errorRate:'%',errorCost:'currency',reworkHours:'h/mes',reworkCost:'currency',
+        users:'usuarios',dashboards:'dashboards',kpis:'KPIs',correctionHours:'h/mes',incidents:'incid./mes',decisionValue:'currency',lateLosses:'currency',missedOpps:'currency',lateInfoCost:'currency',
+        simpleQueries:'interac./mes',complexQueries:'interac./mes',transactions:'tareas/mes',documents:'docs./mes',emails:'emails/mes',escalations:'escal./mes',resolution:'%',escalation:'%',aiTime:'min.',humanTime:'min.',tokens:'tokens/mes',aiCostInteraction:'currency/interac.',infraAi:'currency/mes',knowledgeBase:'currency/mes',supervision:'currency/mes',expectedError:'%',revenue:'currency/mes',currentConversion:'%',expectedConversion:'%',customers:'clientes/mes',avgValue:'currency',additionalSales:'currency/mes',
+        development:'currency',integrations:'integr.',licenses:'lic.',infra:'currency',training:'currency',maintenance:'currency/mes',support:'currency/mes',implementation:'meses'
+      };
+      u=fallbacks[id]||'';
+    }
     if(u==='currency')return selectedCurrency();
     if(typeof u==='string' && u.startsWith('currency/')) return selectedCurrency()+u.slice('currency'.length);
-    if(typeof u==='string' && u.startsWith('currency')) return selectedCurrency()+u.slice('currency'.length);
     return u;
   }
   function applyUnits(){
