@@ -1294,6 +1294,124 @@ body.pbh-modal-open{overflow:hidden!important;}
 #pbhPremiumPromo .pbh-price-secondary{display:block;line-height:1.5}
 @media(max-width:700px){#pbhPremiumPromo .pbh-price-title{font-size:21px}}
 </style>
+
+<style id="pbh-v127-responsive-final">
+/* Global overflow protection */
+html,body{max-width:100%;overflow-x:hidden!important}
+*,*::before,*::after{box-sizing:border-box}
+img,svg,video,canvas,iframe{max-width:100%}
+.container{max-width:1200px;width:min(1200px,calc(100% - 48px));margin-left:auto;margin-right:auto}
+
+/* Header: keep every device visually balanced */
+.header{width:100%;overflow:hidden}
+.nav{min-width:0;gap:18px}
+.brand-header{flex:0 1 220px;min-width:0}
+.brand-header .wordmark img{max-width:100%;height:auto}
+.navlinks{flex:1 1 auto;min-width:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;white-space:nowrap;justify-content:flex-start}
+.navlinks::-webkit-scrollbar{display:none}
+.topcta{flex:0 0 auto}
+
+/* Premium top and actions */
+.pbh-premium-top{min-width:0}
+.pbh-premium-top>div{min-width:0}
+.pbh-premium-top h3{overflow-wrap:anywhere}
+.pbh-premium-top-actions{max-width:100%}
+.pbh-premium-promo{min-width:0}
+.pbh-price-offer{min-width:0}
+.pbh-price-amount{min-width:0}
+
+/* Premium stepper: always one clean row with horizontal scroll instead of wrapping */
+.pbh-stepper{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important;scrollbar-width:none!important;-webkit-overflow-scrolling:touch}
+.pbh-stepper::-webkit-scrollbar{display:none}
+.pbh-step-pill{flex:0 0 auto;white-space:nowrap}
+
+/* Premium forms/grids never overflow */
+.pbh-premium-body,.pbh-premium-form,.pbh-premium-form fieldset,.pbh-premium-grid{min-width:0}
+.pbh-premium-form label{min-width:0}
+.pbh-premium-form input,.pbh-premium-form select,.pbh-premium-form textarea{min-width:0;max-width:100%;}
+.pbh-scenario-table{display:block;overflow-x:auto;white-space:nowrap}
+.pbh-scenario-table table{min-width:680px}
+
+/* Payment/request modal */
+.pbh-modal-backdrop{overscroll-behavior:contain}
+.pbh-modal,.pbh-modal-wide{min-width:0}
+.pbh-payment-methods{min-width:0}
+.pbh-payment-method{min-width:0;overflow:hidden}
+.pbh-payment-account,.pbh-payment-small{overflow-wrap:anywhere;word-break:break-word}
+.pbh-request-grid{min-width:0}
+.pbh-request-grid input,.pbh-request-grid select,.pbh-request-grid textarea{min-width:0;max-width:100%}
+
+/* Charts / tables / cards */
+.pbh-results-card,.pbh-form-card,.pbh-calc,.pbh-free{min-width:0}
+.pbh-snowball-visual,.pbh-gauge,.pbh-result-head,.pbh-result-actions{min-width:0;max-width:100%}
+
+/* Tablet */
+@media (max-width:1100px){
+  .header{height:78px}
+  .nav{gap:12px}
+  .brand-header{flex:0 1 185px}
+  .brand-header .wordmark img{width:185px}
+  .navlinks{gap:16px;font-size:12px}
+  .topcta{padding:12px 14px;font-size:11px}
+  .pbh-premium-benefits{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* Landscape phones / small tablets: prevent nav collisions */
+@media (orientation:landscape) and (max-height:620px){
+  .header{height:64px!important}
+  .brand-header{flex:0 1 165px!important}
+  .brand-header .wordmark img{width:165px!important}
+  .business{font-size:6px!important}
+  .nav{gap:9px!important}
+  .navlinks{gap:12px!important;font-size:11px!important}
+  .navlinks a{height:64px!important}
+  .topcta{padding:9px 11px!important;font-size:10px!important}
+  .pbh-premium-top{padding:16px 20px!important}
+  .pbh-premium-stepper,.pbh-stepper{padding:10px 18px!important}
+}
+
+/* Phones */
+@media (max-width:760px){
+  .container{width:calc(100% - 28px)!important}
+  .header{height:72px!important}
+  .nav{gap:8px!important}
+  .brand-header{flex:1 1 auto!important;min-width:0!important;max-width:none!important}
+  .brand-header .wordmark img{width:155px!important;max-width:100%!important}
+  .language-current{flex:0 0 auto;max-width:92px!important}
+  .topcta{flex:0 0 auto;padding:10px 11px!important;font-size:10px!important;max-width:116px;overflow:hidden;text-overflow:ellipsis}
+  .pbh-premium-top{padding:18px 16px!important}
+  .pbh-premium-top-actions{width:100%;justify-content:flex-start!important}
+  .pbh-premium-top-actions>*{max-width:100%}
+  .pbh-premium-body{padding:18px 16px!important}
+  .pbh-premium-benefits{grid-template-columns:1fr 1fr!important}
+  .pbh-premium-actions{width:100%}
+  .pbh-premium-actions>*{width:100%}
+  .pbh-premium-form{width:100%}
+  .pbh-premium-form fieldset{width:100%}
+  .pbh-stepper{padding:10px 14px!important}
+  .pbh-step-pill{font-size:13px!important;padding:7px 9px!important}
+  .pbh-result-actions{justify-content:stretch!important}
+  .pbh-result-actions>*{flex:1 1 150px;justify-content:center}
+  .pbh-export-btn,.pbh-guide-btn{width:auto;max-width:100%}
+  .pbh-modal-backdrop{padding:8px!important}
+  .pbh-modal,.pbh-modal-wide{max-height:calc(100dvh - 16px)!important}
+  .pbh-payment-methods{grid-template-columns:1fr 1fr!important}
+  .pbh-payment-method{min-height:92px!important}
+}
+
+/* Very small phones */
+@media (max-width:390px){
+  .container{width:calc(100% - 20px)!important}
+  .header{height:68px!important}
+  .brand-header .wordmark img{width:128px!important}
+  .language-current{min-width:84px!important;width:84px!important;font-size:10px!important}
+  .topcta{max-width:96px!important;padding:9px 7px!important}
+  .pbh-premium-benefits{grid-template-columns:1fr!important}
+  .pbh-payment-methods{grid-template-columns:1fr!important}
+  .pbh-step-pill{font-size:12px!important}
+}
+</style>
+
 </head>
 <body>
 <header class="header"><div class="container nav">
