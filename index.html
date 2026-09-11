@@ -1099,6 +1099,9 @@ body.pbh-modal-open{overflow:hidden!important;}
 </style>
 
 
+<style id="pbh-v122-units-all-fields">
+.pbh-free-input-wrap{position:relative;width:100%}.pbh-free-input-wrap input{padding-right:92px!important;box-sizing:border-box}.pbh-free-unit{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:600;white-space:nowrap;pointer-events:none}.pbh-free-input-wrap:focus-within .pbh-free-unit{color:#1268b4!important}@media(max-width:760px){.pbh-free-unit{right:10px;font-size:9.5px}.pbh-free-input-wrap input{padding-right:78px!important}}
+</style>
 <style id="pbh-v112-premium-units-landscape">
 /* v112: units aligned to the far right of Premium fields */
 .pbh-premium-form label.pbh-has-unit{position:relative;display:block}
@@ -1747,8 +1750,17 @@ if (whatsappLink) {
     }
     const readonly=type==='moneyRead'?' readonly':'';
     const cls=moneyType?'pbh-money':'pbh-number';
-    const suffix=moneyType?(window.roiCurrencyCode&&window.roiCurrencyCode()==='USD'?'US$':'PEN'):(id==='time'?'min.':id==='costHour'?'PEN':id==='reports'?(lang()==='en'?'reports':'reportes'):'');
-    return label+`<div style="position:relative"><input class="${cls} ${readonly?'pbh-readonly':''}" data-f="${id}" ${moneyType?'data-money="true"':''} type="number" min="0" value="${Number(shown).toFixed(moneyType&&window.roiCurrencyCode&&window.roiCurrencyCode()==='USD'?2:0)}"${readonly}><span style="position:absolute;right:12px;top:13px;color:${readonly?'#fff':'#728096'};font-size:10px">${suffix}</span></div></div>`;
+    const freeUnits={
+      rpa:{volume:tr('ejec./mes','exec./month'),people:tr('pers.','people'),time:'min.',costHour:'currency'},
+      bi:{reports:tr('reportes/mes','reports/month'),hoursReport:tr('h/reporte','h/report'),people:tr('pers.','people'),costHour:'currency'},
+      agent:{interactions:tr('interac./mes','interactions/month'),time:'min./tarea',days:tr('días/mes','days/month'),people:tr('pers.','people'),costHour:'currency'},
+      web:{visits:tr('visitas/mes','visits/month'),avgValue:'currency',people:tr('pers.','people'),timeLead:'min./lead',costHour:'currency'}
+    };
+    const project=state.project||'rpa';
+    let suffix=freeUnits[project]?.[id]||'';
+    if(moneyType) suffix=window.roiCurrencyCode&&window.roiCurrencyCode()==='USD'?'US$':'PEN';
+    if(suffix==='currency') suffix=window.roiCurrencyCode&&window.roiCurrencyCode()==='USD'?'US$':'PEN';
+    return label+`<div class="pbh-free-input-wrap"><input class="${cls} ${readonly?'pbh-readonly':''}" data-f="${id}" ${moneyType?'data-money="true"':''} type="number" min="0" value="${Number(shown).toFixed(moneyType&&window.roiCurrencyCode&&window.roiCurrencyCode()==='USD'?2:0)}"${readonly}><span class="pbh-free-unit" style="color:${readonly?'#fff':'#728096'}">${suffix}</span></div></div>`;
   }
   function snapshotFreeInputs(){
     const snap={...state.freeForm};
@@ -2979,6 +2991,32 @@ function closeModal(id){
       maintenance:'currency/mes',
       support:'currency/mes',
       implementation:'meses'
+    },
+    web:{
+      webVisits:'visitas/mes',
+      webLeads:'leads/mes',
+      webCurrentConversion:'%',
+      webExpectedConversion:'%',
+      webAvgValue:'currency',
+      webTrafficGrowth:'%',
+      webEnquiries:'consultas/mes',
+      webTime:'min./consulta',
+      webPeople:'pers.',
+      webCostHour:'currency',
+      webLostLeads:'%',
+      webAdminHours:'h/mes',
+      development:'currency',
+      webHosting:'currency/mes',
+      webDomain:'currency/año',
+      maintenance:'currency/mes',
+      integrations:'integr.',
+      webExtraInvestment:'currency',
+      additionalSales:'currency/mes',
+      webRevenue:'currency/mes',
+      webCustomers:'clientes/mes',
+      webConfidence:'%',
+      webLeadTarget:'leads/mes',
+      implementation:'meses'
     }
   };
   function selectedCurrency(){
@@ -2997,7 +3035,8 @@ function closeModal(id){
         steps:'pasos',exceptions:'excep./mes',humanIntervention:'%',errorRate:'%',errorCost:'currency',reworkHours:'h/mes',reworkCost:'currency',
         users:'usuarios',dashboards:'dashboards',kpis:'KPIs',correctionHours:'h/mes',incidents:'incid./mes',decisionValue:'currency',lateLosses:'currency',missedOpps:'currency',lateInfoCost:'currency',
         simpleQueries:'interac./mes',complexQueries:'interac./mes',transactions:'tareas/mes',documents:'docs./mes',emails:'emails/mes',escalations:'escal./mes',resolution:'%',escalation:'%',aiTime:'min.',humanTime:'min.',tokens:'tokens/mes',aiCostInteraction:'currency/interac.',infraAi:'currency/mes',knowledgeBase:'currency/mes',supervision:'currency/mes',expectedError:'%',revenue:'currency/mes',currentConversion:'%',expectedConversion:'%',customers:'clientes/mes',avgValue:'currency',additionalSales:'currency/mes',
-        development:'currency',integrations:'integr.',licenses:'lic.',infra:'currency',training:'currency',maintenance:'currency/mes',support:'currency/mes',implementation:'meses'
+        development:'currency',integrations:'integr.',licenses:'lic.',infra:'currency',training:'currency',maintenance:'currency/mes',support:'currency/mes',implementation:'meses',
+        webVisits:'visitas/mes',webLeads:'leads/mes',webCurrentConversion:'%',webExpectedConversion:'%',webAvgValue:'currency',webTrafficGrowth:'%',webEnquiries:'consultas/mes',webTime:'min./consulta',webPeople:'pers.',webCostHour:'currency',webLostLeads:'%',webAdminHours:'h/mes',webHosting:'currency/mes',webDomain:'currency/año',webExtraInvestment:'currency',webRevenue:'currency/mes',webCustomers:'clientes/mes',webConfidence:'%',webLeadTarget:'leads/mes'
       };
       u=fallbacks[id]||'';
     }
