@@ -1082,6 +1082,46 @@ body.pbh-modal-open{overflow:hidden!important;}
 @media(max-width:700px){.pbh-request-segment{padding:15px 14px}.pbh-request-segment h4{font-size:15px}}
 </style>
 
+
+<style id="pbh-v112-premium-units-landscape">
+/* v112: units aligned to the far right of Premium fields */
+.pbh-premium-form label.pbh-has-unit{position:relative;display:block}
+.pbh-premium-form label.pbh-has-unit input,
+.pbh-premium-form label.pbh-has-unit select{padding-right:58px!important}
+.pbh-premium-form label.pbh-has-unit::after{
+  content:attr(data-unit);
+  position:absolute;
+  right:12px;
+  bottom:11px;
+  color:#718096;
+  font:500 10px/1 Inter,Arial,sans-serif;
+  pointer-events:none;
+  white-space:nowrap;
+}
+.pbh-premium-form label.pbh-has-unit:focus-within::after{color:#1268b4}
+/* Landscape phones/tablets: keep the navigation on one line */
+@media (orientation:landscape) and (max-height:600px) and (max-width:1100px){
+  .header{height:64px;position:sticky;top:0}
+  .nav{gap:10px}
+  .brand{min-width:150px;gap:8px}
+  .brand-header{min-width:145px}
+  .wordmark img{width:145px}
+  .business{font-size:6.5px;letter-spacing:.33em}
+  .navlinks{gap:10px;font-size:10px;white-space:nowrap;flex:1;justify-content:center}
+  .navlinks a{height:64px}
+  .navlinks a.active:after{bottom:9px;height:2px}
+  .topcta{padding:9px 11px;font-size:10px}
+  .language-switch{margin-left:0}
+  .language-switch select{min-width:76px;font-size:10px;padding:7px 22px 7px 8px}
+}
+@media (orientation:landscape) and (max-height:600px) and (max-width:800px){
+  .brand{min-width:128px}.brand-header{min-width:125px}.wordmark img{width:122px}.navlinks{gap:8px;font-size:9px}.topcta{display:none}.language-switch select{min-width:72px}
+}
+@media (orientation:landscape) and (max-height:600px) and (max-width:680px){
+  .navlinks{display:none}.brand{min-width:0}.language-switch{margin-left:auto}.topcta{display:inline-flex;padding:8px 10px;font-size:9px}
+}
+</style>
+
 </head>
 <body>
 <header class="header"><div class="container nav">
@@ -2623,4 +2663,46 @@ function closeModal(id){
   window.pbhTranslateEverything=translateAll;
 })();
 </script>
-<style id="pbh-fixed-nav-v103-override">.header{position:fixed!important;top:0!important;left:0!important;right:0!important;width:100%!important;z-index:10000!important;}@media(max-width:760px){.header{height:72px!important;}}</style></body></html>
+<style id="pbh-fixed-nav-v103-override">.header{position:fixed!important;top:0!important;left:0!important;right:0!important;width:100%!important;z-index:10000!important;}@media(max-width:760px){.header{height:72px!important;}}</style>
+<script id="pbh-v112-units">
+(function(){
+  const UNIT_MAP={
+    rpa:{steps:'pasos',exceptions:'mes',humanIntervention:'%',errorRate:'%',errorCost:'currency',reworkHours:'h',reworkCost:'currency',development:'currency',integrations:'integraciones',licenses:'licencias',infra:'currency',training:'currency',maintenance:'currency',support:'currency',implementation:'meses'},
+    bi:{users:'usuarios',dashboards:'dashboards',kpis:'KPIs',errorRate:'%',correctionHours:'h',incidents:'mes',decisionValue:'currency',lateLosses:'currency',missedOpps:'currency',lateInfoCost:'currency',development:'currency',integrations:'integraciones',licenses:'licencias',infra:'currency',training:'currency',maintenance:'currency',support:'currency',implementation:'meses'},
+    agent:{simpleQueries:'mes',complexQueries:'mes',transactions:'mes',documents:'mes',emails:'mes',escalations:'mes',resolution:'%',escalation:'%',aiTime:'min.',humanTime:'min.',tokens:'tokens',aiCostInteraction:'currency',infraAi:'currency',knowledgeBase:'currency',supervision:'currency',errorRate:'%',errorCost:'currency',expectedError:'%',revenue:'currency',currentConversion:'%',expectedConversion:'%',customers:'clientes',avgValue:'currency',additionalSales:'currency',development:'currency',integrations:'integraciones',licenses:'licencias',infra:'currency',training:'currency',maintenance:'currency',support:'currency',implementation:'meses'}
+  };
+  function selectedCurrency(){
+    const cb=document.getElementById('roiCurrencyToggle');
+    return cb&&cb.checked?'US$':'S/';
+  }
+  function currentProject(){
+    try{return window.state?.project || window.pbhState?.project || document.querySelector('[data-project]')?.dataset.project || ''}catch(e){return ''}
+  }
+  function unitFor(id){
+    const p=currentProject();
+    const map=UNIT_MAP[p]||{};
+    const u=map[id];
+    if(!u)return '';
+    if(u==='currency')return selectedCurrency();
+    return u;
+  }
+  function applyUnits(){
+    document.querySelectorAll('.pbh-premium-form label').forEach(label=>{
+      const input=label.querySelector('input[data-pf], select[data-pf], textarea[data-pf]');
+      if(!input || input.tagName==='TEXTAREA'){label.classList.remove('pbh-has-unit');label.removeAttribute('data-unit');return;}
+      const unit=unitFor(input.dataset.pf);
+      if(unit){label.classList.add('pbh-has-unit');label.dataset.unit=unit;}
+      else {label.classList.remove('pbh-has-unit');label.removeAttribute('data-unit');}
+    });
+  }
+  function schedule(){requestAnimationFrame(()=>setTimeout(applyUnits,0));}
+  document.addEventListener('DOMContentLoaded',schedule);
+  window.addEventListener('presencia-language-changed',schedule);
+  window.addEventListener('presencia-currency-changed',schedule);
+  const root=document.getElementById('pbhCalculator')||document.body;
+  if(root && window.MutationObserver){new MutationObserver(()=>schedule()).observe(root,{childList:true,subtree:true});}
+  window.pbhApplyPremiumUnits=applyUnits;
+})();
+</script>
+
+</body></html>
