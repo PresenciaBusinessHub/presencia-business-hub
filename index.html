@@ -1298,7 +1298,10 @@ body.pbh-modal-open{overflow:hidden!important;}
 <style id="pbh-v128-calc-first-view">
 /* First-view Premium promotion */
 .pbh-calc-hero{position:relative}
-.pbh-calc-hero .pbh-hero-offer{display:inline-flex;align-items:center;gap:10px;margin:16px auto 4px;padding:9px 14px;border-radius:999px;border:1px solid rgba(45,124,255,.18);background:linear-gradient(90deg,#eef5ff 0%,#fff6ef 100%);color:#14385d;font-size:12px;font-weight:700;box-shadow:0 6px 18px rgba(17,48,85,.06)}
+.pbh-calc-hero 
+.pbh-hero-plans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:860px;margin:18px auto 0}.pbh-hero-plan{border:1px solid var(--pbh-line);border-radius:14px;background:rgba(255,255,255,.92);padding:14px 18px;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:14px;box-shadow:0 8px 20px rgba(15,34,60,.05)}.pbh-hero-plan.free{border-color:#cfe2f7}.pbh-hero-plan.premium{border-color:#ffc58f;background:linear-gradient(135deg,#fff8f1,#fff)}.pbh-hero-plan-copy{min-width:0}.pbh-hero-plan-kicker{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#2d7cff}.pbh-hero-plan.premium .pbh-hero-plan-kicker{color:#ff6a00}.pbh-hero-plan-title{margin:3px 0 0;color:var(--pbh-ink);font-size:16px;font-weight:700}.pbh-hero-plan-sub{margin:2px 0 0;color:var(--pbh-muted);font-size:12px}.pbh-hero-plan-badge{flex:0 0 auto;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:800;white-space:nowrap;color:#0b5db7;background:#eaf3ff}.pbh-hero-plan.premium .pbh-hero-plan-badge{color:#fff;background:linear-gradient(135deg,#ff8a1f,#ff5e00);box-shadow:0 6px 16px rgba(255,106,0,.2)}
+@media(max-width:700px){.pbh-hero-plans{grid-template-columns:1fr;gap:10px}.pbh-hero-plan{padding:12px 14px}.pbh-hero-plan-title{font-size:15px}}
+.pbh-hero-offer{display:inline-flex;align-items:center;gap:10px;margin:16px auto 4px;padding:9px 14px;border-radius:999px;border:1px solid rgba(45,124,255,.18);background:linear-gradient(90deg,#eef5ff 0%,#fff6ef 100%);color:#14385d;font-size:12px;font-weight:700;box-shadow:0 6px 18px rgba(17,48,85,.06)}
 .pbh-calc-hero .pbh-hero-offer strong{color:#ff6a00}
 .pbh-calc-hero .pbh-hero-offer s{color:#6f7f92;font-weight:600}
 .pbh-project-icon{position:relative;width:48px;height:48px;border-radius:14px;flex:0 0 auto;display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 7px 16px rgba(18,45,75,.08)}
@@ -1573,6 +1576,24 @@ img,svg,video,canvas,iframe{max-width:100%}
       <h2>Calcula el impacto de tu próximo <span>proyecto.</span></h2>
       <p>Obtén una estimación rápida del valor que una solución tecnológica podría generar para tu organización.</p>
       <div class="pbh-hero-offer" aria-label="Oferta Premium"><span data-es="✦ Oferta Premium" data-en="✦ Premium Offer">✦ Oferta Premium</span><s>US$ 50</s><strong data-es="Ahora US$ 20" data-en="Now US$ 20">Ahora US$ 20</strong><span data-es="≈ PEN 70 · pago único" data-en="≈ PEN 70 · one-time payment">≈ PEN 70 · pago único</span></div>
+      <div class="pbh-hero-plans" aria-label="Planes disponibles">
+        <div class="pbh-hero-plan free" id="pbhHeroFreePlan" role="button" tabindex="0" aria-label="Evaluación Free">
+          <div class="pbh-hero-plan-copy">
+            <div class="pbh-hero-plan-kicker" data-es="GRATIS" data-en="FREE">GRATIS</div>
+            <div class="pbh-hero-plan-title" data-es="Evaluación inicial" data-en="Initial assessment">Evaluación inicial</div>
+            <div class="pbh-hero-plan-sub" data-es="Calcula tu potencial sin registrarte." data-en="Estimate your potential without signing in.">Calcula tu potencial sin registrarte.</div>
+          </div>
+          <div class="pbh-hero-plan-badge" data-es="PEN 0" data-en="US$ 0">PEN 0</div>
+        </div>
+        <div class="pbh-hero-plan premium">
+          <div class="pbh-hero-plan-copy">
+            <div class="pbh-hero-plan-kicker" data-es="PREMIUM" data-en="PREMIUM">PREMIUM</div>
+            <div class="pbh-hero-plan-title" data-es="Business Case completo" data-en="Full Business Case">Business Case completo</div>
+            <div class="pbh-hero-plan-sub" data-es="Escenarios, sensibilidad, riesgos y Excel." data-en="Scenarios, sensitivity, risks and Excel.">Escenarios, sensibilidad, riesgos y Excel.</div>
+          </div>
+          <div class="pbh-hero-plan-badge" data-es="US$ 20" data-en="US$ 20">US$ 20</div>
+        </div>
+      </div>
     </div>
 
 <div id="pbhPremiumPromo" class="pbh-premium-promo">
@@ -3331,4 +3352,4 @@ function closeModal(id){
 })();
 </script>
 
-</body></html>
+<script>document.addEventListener('DOMContentLoaded',function(){const b=document.getElementById('pbhHeroFreePlan');const target=document.getElementById('pbhProjectGrid');if(b&&target){const go=()=>target.scrollIntoView({behavior:'smooth',block:'start'});b.addEventListener('click',go);b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});}}</script></body></html>
