@@ -788,7 +788,22 @@ body {
   #pbhRequestBtn{width:100%;font-size:13px !important;}
 }
 </style>
-
+<style id="pbh-v120-premium-price-promo">
+/* v120: Premium pricing promotional banner */
+.pbh-premium-promo{position:relative;overflow:hidden}
+.pbh-premium-promo:before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:linear-gradient(180deg,#ff7a18,#ff5a00);border-radius:18px 0 0 18px}
+.pbh-price-offer{position:relative;display:flex;align-items:center;justify-content:space-between;gap:22px;margin:0 0 20px;padding:16px 18px;border:1px solid rgba(255,255,255,.10);border-radius:16px;background:linear-gradient(135deg,rgba(45,124,255,.20),rgba(255,106,0,.16));box-shadow:0 10px 30px rgba(0,0,0,.10);overflow:hidden}
+.pbh-price-offer:after{content:"";position:absolute;right:-44px;top:-58px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.13),rgba(255,255,255,0) 68%);pointer-events:none}
+.pbh-price-offer-copy{position:relative;z-index:1;min-width:0}
+.pbh-price-kicker{display:inline-flex;align-items:center;gap:7px;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#9fc6ff;margin-bottom:6px}
+.pbh-price-title{margin:0;color:#fff;font-size:18px;line-height:1.2;letter-spacing:-.02em;font-weight:800}
+.pbh-price-sub{margin:5px 0 0;color:#c7d5e6;font-size:10px;line-height:1.5}
+.pbh-price-amount{position:relative;z-index:1;flex:0 0 auto;text-align:right;padding-left:10px}
+.pbh-price-main{display:block;color:#fff;font-size:31px;line-height:1;font-weight:900;letter-spacing:-.04em;white-space:nowrap}
+.pbh-price-secondary{display:block;margin-top:7px;color:#ffd3b3;font-size:11px;font-weight:800;white-space:nowrap}
+.pbh-price-badge{display:inline-flex;align-items:center;justify-content:center;margin-top:9px;padding:5px 9px;border-radius:999px;background:#ff6a00;color:#fff;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+@media(max-width:700px){.pbh-price-offer{align-items:flex-start;flex-direction:column;gap:12px;padding:15px}.pbh-price-amount{text-align:left;padding-left:0}.pbh-price-main{font-size:27px}.pbh-price-secondary{font-size:10px}}
+</style>
 
 <style id="v70-testimonials-login">
 /* v70: Premium login CTA in PBH blue */
@@ -1309,6 +1324,18 @@ body.pbh-modal-open{overflow:hidden!important;}
     <div id="pbhPremiumPromo" class="pbh-premium-promo">
       <!--  -->
       <div class="pbh-premium-badge">PREMIUM</div>
+      <div class="pbh-price-offer" aria-label="Precio de acceso Premium">
+        <div class="pbh-price-offer-copy">
+          <div class="pbh-price-kicker" data-es="OFERTA ESPECIAL PBH" data-en="PBH SPECIAL OFFER">✦ <span>OFERTA ESPECIAL PBH</span></div>
+          <h4 class="pbh-price-title" data-es="Business Case Premium por solo US$ 20" data-en="Premium Business Case for only US$ 20">Business Case Premium por solo US$ 20</h4>
+          <p class="pbh-price-sub" data-es="Análisis avanzado para evaluar si realmente conviene invertir." data-en="Advanced analysis to assess whether the investment is really worthwhile.">Análisis avanzado para evaluar si realmente conviene invertir.</p>
+        </div>
+        <div class="pbh-price-amount">
+          <span class="pbh-price-main">US$ 20</span>
+          <span class="pbh-price-secondary" data-es="≈ PEN 70 · pago único" data-en="≈ PEN 70 · one-time payment">≈ PEN 70 · pago único</span>
+          <span class="pbh-price-badge" data-es="Acceso Premium" data-en="Premium access">Acceso Premium</span>
+        </div>
+      </div>
       <h3>¿Quieres saber si realmente conviene invertir?</h3>
       <p>Una estimación básica no considera todos los costos, riesgos y escenarios que pueden afectar la rentabilidad de un proyecto.</p>
       <p>Con el Business Case Premium de PBH podrás realizar un análisis más completo para tomar decisiones con mayor certeza.</p>
