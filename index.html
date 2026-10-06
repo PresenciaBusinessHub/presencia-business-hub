@@ -1861,6 +1861,7 @@ img,svg,video,canvas,iframe{max-width:100%}
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
+const PBH_LEAD_WEB_URL = 'https://default7cc4ee2050fa4a1dbb720130da6412.92.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/30/workflows/2d03433a1b524f6ebaa79f5d103eb01d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=41lO2YAd7O-ZnjbI0je8k2R9yLkhCv6iXzSFleqt65w';  
 const links = [...document.querySelectorAll('.navlinks a')];
 const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
 
@@ -1906,7 +1907,56 @@ if (contactForm) {
   contactForm.addEventListener('focusin', markFormStart);
 }
 
-function submitContact(event){
+async function submitContact(event){
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  const data = new FormData(form);
+
+  const payload = {
+    nombre: data.get('nombre') || '',
+    empresa: data.get('empresa') || '',
+    correo: data.get('correo') || '',
+    telefono: data.get('telefono') || '',
+    mensaje: data.get('mensaje') || ''
+  };
+
+  const messageElement = document.getElementById('form-message');
+
+  // Registrar envío del formulario en GA4
+  trackEvent('formulario_enviado', {
+    form_name: 'contacto',
+    company_present: payload.empresa ? 'yes' : 'no'
+  });
+
+  messageElement.textContent = 'Enviando tu solicitud...';
+
+  try {
+    const response = await fetch(PBH_LEAD_WEB_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw new Error('Error HTTP: ' + response.status);
+    }
+
+    messageElement.textContent =
+      '¡Solicitud enviada correctamente! Nos pondremos en contacto contigo pronto.';
+
+    form.reset();
+
+  } catch (error) {
+
+    console.error('Error enviando lead:', error);
+
+    messageElement.textContent =
+      'No pudimos enviar la solicitud. Por favor, inténtalo nuevamente o contáctanos por WhatsApp.';
+  }
+}
   event.preventDefault();
 
   const form = event.currentTarget;
