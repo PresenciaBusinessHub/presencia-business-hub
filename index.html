@@ -1957,38 +1957,6 @@ async function submitContact(event){
       'No pudimos enviar la solicitud. Por favor, inténtalo nuevamente o contáctanos por WhatsApp.';
   }
 }
-  event.preventDefault();
-
-  const form = event.currentTarget;
-  const data = new FormData(form);
-
-  const name = data.get('nombre') || '';
-  const email = data.get('correo') || '';
-  const company = data.get('empresa') || '';
-
-  const subject = encodeURIComponent('Deseo automatizar uno de mis procesos');
-  const body = encodeURIComponent(
-    'Nombre: ' + name +
-    '\nEmpresa: ' + company +
-    '\nCorreo: ' + email +
-    '\nTeléfono: ' + (data.get('telefono') || '') +
-    '\n\nMensaje:\n' + (data.get('mensaje') || '')
-  );
-
-  // Event registered as a commercial conversion candidate.
-  trackEvent('formulario_enviado', {
-    form_name: 'contacto',
-    company_present: company ? 'yes' : 'no'
-  });
-
-  document.getElementById('form-message').textContent =
-    (document.documentElement.lang === 'en' ? 'Opening your email to send the request...' : 'Abriendo tu correo para enviar la solicitud...');
-
-  // Give Analytics a moment to dispatch before navigating to mailto.
-  setTimeout(() => {
-    window.open('https://outlook.office.com/mail/deeplink/compose?to=ventas%40presencia.pe&subject=' + subject + '&body=' + body, '_blank', 'noopener');
-  }, 500);
-}
 
 const navItems = [...document.querySelectorAll('.navlinks a[href^="#"]')];
 const navTargets = navItems.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
