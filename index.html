@@ -2325,6 +2325,34 @@ img,svg,video,canvas,iframe{max-width:100%}
 .pbh-showcase-hint{margin-top:18px!important;font-size:10px!important;color:#718198!important}
 </style>
 
+
+<style id="pbh-language-menu-final-fix">
+/* El selector de idioma debe desplegarse completo por encima del header */
+.header, .nav, .language-switch {
+  overflow: visible !important;
+}
+.header {
+  position: fixed !important;
+  z-index: 10000 !important;
+}
+.language-switch {
+  position: relative !important;
+  z-index: 10050 !important;
+}
+.language-menu {
+  position: absolute !important;
+  right: 0 !important;
+  top: calc(100% + 8px) !important;
+  z-index: 10060 !important;
+  min-width: 160px !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+.language-option {
+  min-height: 38px !important;
+  white-space: nowrap !important;
+}
+</style>
 </head>
 <body>
 <header class="header"><div class="container nav">
