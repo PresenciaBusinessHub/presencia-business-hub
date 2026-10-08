@@ -1529,6 +1529,36 @@ img,svg,video,canvas,iframe{max-width:100%}
 <style id="pbh-final-product-removal">
 .pbh-premium-modal,.pbh-premium-overlay,.pbh-premium-promo,.pbh-request-segment,.payment-segment,.corporate-segment{display:none!important}
 </style>
+
+<style id="pbh-fix-carrusel-flotante">
+/* FIX: el carrusel de clientes debe sobresalir/flotar sobre la parte inferior del hero */
+.hero {
+  overflow: visible !important;
+  position: relative !important;
+}
+.hero .trust {
+  position: absolute !important;
+  z-index: 50 !important;
+  left: 50% !important;
+  bottom: -72px !important;
+  transform: translateX(-50%) !important;
+  width: min(1180px, calc(100% - 48px)) !important;
+}
+.hero .client-window {
+  overflow: hidden !important;
+}
+.hero .client-track {
+  display: flex !important;
+  width: max-content !important;
+  animation: logos 34s linear infinite !important;
+}
+@media (max-width: 768px) {
+  .hero .trust {
+    width: calc(100% - 30px) !important;
+    bottom: -105px !important;
+  }
+}
+</style>
 </head>
 <body>
 <header class="header"><div class="container nav">
