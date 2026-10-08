@@ -1813,6 +1813,158 @@ img,svg,video,canvas,iframe{max-width:100%}
 }
 </style>
 
+
+<style id="pbh-fix-testimonials-width">
+/* =========================================================
+   PBH — Testimonios: ancho corporativo y carrusel contenido
+   ========================================================= */
+.testimonials-wrap{
+  width:min(1200px,calc(100% - 48px)) !important;
+  max-width:1200px !important;
+  margin:64px auto 0 !important;
+  padding-top:0 !important;
+  box-sizing:border-box !important;
+}
+
+.testimonials-head{
+  width:100% !important;
+  max-width:1120px !important;
+  margin:0 auto 24px !important;
+}
+
+.testimonials-head h3{
+  font-size:30px !important;
+  line-height:1.18 !important;
+  letter-spacing:-.035em !important;
+  margin:8px 0 10px !important;
+}
+
+.testimonials-head p{
+  font-size:14px !important;
+  line-height:1.65 !important;
+  max-width:760px !important;
+}
+
+.testimonials-badge{
+  font-size:10px !important;
+}
+
+.testimonials-carousel{
+  width:100% !important;
+  max-width:1200px !important;
+  margin:0 auto !important;
+  padding:28px 58px 26px !important;
+  box-sizing:border-box !important;
+  border-radius:20px !important;
+}
+
+.testimonials-track{
+  width:100% !important;
+  max-width:100% !important;
+  display:flex !important;
+  flex-wrap:nowrap !important;
+}
+
+.testimonial-slide{
+  flex:0 0 33.333333% !important;
+  width:33.333333% !important;
+  min-width:33.333333% !important;
+  max-width:33.333333% !important;
+  padding:6px 18px 8px !important;
+  box-sizing:border-box !important;
+}
+
+.testimonial-card{
+  min-height:215px !important;
+}
+
+.testimonial-quote{
+  font-size:18px !important;
+  line-height:1.55 !important;
+  padding:0 18px !important;
+  margin:18px 0 22px !important;
+}
+
+.testimonial-person strong{
+  font-size:13px !important;
+}
+
+.testimonial-person span{
+  font-size:11px !important;
+}
+
+.testimonial-stars{
+  font-size:18px !important;
+}
+
+.testimonial-score{
+  font-size:11px !important;
+}
+
+.testimonial-arrow{
+  width:42px !important;
+  height:42px !important;
+  z-index:20 !important;
+}
+
+.testimonial-arrow.prev{left:14px !important}
+.testimonial-arrow.next{right:14px !important}
+
+.testimonial-dots{
+  margin-top:18px !important;
+}
+
+/* Tablet */
+@media (max-width: 1100px){
+  .testimonials-wrap{
+    width:min(100% - 36px, 980px) !important;
+  }
+  .testimonial-slide{
+    padding-left:14px !important;
+    padding-right:14px !important;
+  }
+  .testimonial-quote{
+    font-size:16px !important;
+  }
+}
+
+/* Mobile */
+@media (max-width: 760px){
+  .testimonials-wrap{
+    width:calc(100% - 30px) !important;
+    margin-top:46px !important;
+  }
+
+  .testimonials-head{
+    margin-bottom:18px !important;
+  }
+
+  .testimonials-head h3{
+    font-size:24px !important;
+  }
+
+  .testimonials-head p{
+    font-size:13px !important;
+  }
+
+  .testimonials-carousel{
+    padding:22px 48px 22px !important;
+  }
+
+  .testimonial-slide{
+    flex:0 0 100% !important;
+    width:100% !important;
+    min-width:100% !important;
+    max-width:100% !important;
+    padding:4px 8px 6px !important;
+  }
+
+  .testimonial-card{
+    min-height:220px !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <header class="header"><div class="container nav">
