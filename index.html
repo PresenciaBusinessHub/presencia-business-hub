@@ -2297,6 +2297,51 @@ img,svg,video,canvas,iframe{max-width:100%}
 }
 </style>
 
+
+<style id="pbh-showcase-professional-upload">
+/* PBH — Showcase visual profesional + carga local de imágenes */
+.pbh-showcase-pro{padding:104px 0 88px!important;background:linear-gradient(180deg,#fff 0%,#f7f9fc 100%)!important}
+.pbh-showcase-pro:before{width:680px;height:680px;right:-250px;top:-300px;background:radial-gradient(circle,rgba(37,99,235,.075),rgba(37,99,235,0) 68%)}
+.pbh-showcase-pro .pbh-showcase-head{align-items:end;margin-bottom:38px}
+.pbh-showcase-head-right{display:flex;align-items:flex-end;gap:20px;max-width:510px}
+.pbh-showcase-head-right p{max-width:350px!important;margin:0!important}
+.pbh-image-manager-trigger{flex:0 0 auto;border:1px solid #c9d7e8;background:#fff;color:#17385f;border-radius:8px;padding:10px 14px;font-size:11px;font-weight:700;letter-spacing:.01em;cursor:pointer;transition:all .22s ease;white-space:nowrap}
+.pbh-image-manager-trigger:hover{border-color:#2563eb;color:#2563eb;box-shadow:0 7px 20px rgba(31,79,139,.09);transform:translateY(-1px)}
+.pbh-showcase-grid-pro{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:22px!important}
+.pbh-showcase-card-pro{min-height:0!important;height:auto!important;overflow:hidden;border-radius:16px!important;background:#fff!important;border:1px solid #dce5ef!important;box-shadow:0 18px 45px rgba(21,52,88,.09)!important;cursor:pointer;transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease}
+.pbh-showcase-card-pro:after{display:none!important}
+.pbh-showcase-card-pro:hover{transform:translateY(-5px);border-color:#bfd1e6!important;box-shadow:0 24px 58px rgba(21,52,88,.14)!important}
+.pbh-showcase-media{position:relative;height:315px;overflow:hidden;background:#071625}
+.pbh-showcase-media:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,12,24,.04) 20%,rgba(3,12,24,.12) 58%,rgba(3,12,24,.48) 100%);pointer-events:none}
+.pbh-showcase-card-pro img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;transition:transform .7s cubic-bezier(.22,.61,.36,1),filter .45s ease!important}
+.pbh-showcase-card-pro:hover img{transform:scale(1.045)!important;filter:saturate(1.05) contrast(1.02)!important}
+.pbh-showcase-index{position:absolute;z-index:2;left:18px;top:17px;display:grid;place-items:center;width:35px;height:35px;border:1px solid rgba(255,255,255,.42);background:rgba(5,18,35,.52);backdrop-filter:blur(8px);border-radius:50%;color:#fff;font-size:10px;font-weight:800;letter-spacing:.05em}
+.pbh-showcase-expand{position:absolute;z-index:2;right:18px;bottom:17px;padding:8px 11px;border:1px solid rgba(255,255,255,.35);background:rgba(5,18,35,.42);backdrop-filter:blur(8px);border-radius:7px;color:#fff;font-size:10px;font-weight:700;opacity:.9;transition:all .22s ease}
+.pbh-showcase-card-pro:hover .pbh-showcase-expand{background:rgba(255,255,255,.94);color:#0b2c50;border-color:#fff}
+.pbh-showcase-content-pro{position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;padding:22px 23px 25px!important;color:#10243e!important}
+.pbh-showcase-content-pro .pbh-showcase-label{padding:0!important;border:0!important;background:none!important;backdrop-filter:none!important;color:#2563eb!important;font-size:9px!important;letter-spacing:.12em!important}
+.pbh-showcase-content-pro h3{margin:10px 0 8px!important;color:#10243e!important;font-size:22px!important;line-height:1.18!important;letter-spacing:-.025em!important}
+.pbh-showcase-content-pro p{margin:0!important;color:#65768d!important;font-size:12px!important;line-height:1.65!important;max-width:100%!important}
+.pbh-showcase-hint{margin-top:18px!important;font-size:10px!important;color:#718198!important}
+/* Panel de personalización: se muestra solo al solicitarlo */
+.pbh-image-manager{position:fixed;inset:0;z-index:10001;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(4,12,24,.68);backdrop-filter:blur(9px)}
+.pbh-image-manager.is-open{display:flex}
+.pbh-image-manager-panel{width:min(620px,94vw);background:#fff;border:1px solid #d7e1ec;border-radius:16px;box-shadow:0 30px 90px rgba(3,16,34,.25);overflow:hidden}
+.pbh-image-manager-head{display:flex;align-items:center;justify-content:space-between;padding:20px 22px;border-bottom:1px solid #e6edf5}
+.pbh-image-manager-head h3{margin:0;color:#10243e;font-size:18px}
+.pbh-image-manager-head p{margin:5px 0 0;color:#6b7b90;font-size:11px;line-height:1.5}
+.pbh-image-manager-close{border:0;background:#f3f6fa;color:#24415f;width:34px;height:34px;border-radius:50%;font-size:20px;cursor:pointer}
+.pbh-image-manager-list{display:grid;gap:12px;padding:18px 22px}
+.pbh-image-manager-row{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:13px 14px;border:1px solid #e0e8f1;border-radius:10px}
+.pbh-image-manager-row strong{display:block;color:#17385f;font-size:12px}
+.pbh-image-manager-row small{display:block;margin-top:3px;color:#7a899b;font-size:10px}
+.pbh-image-manager-row label{display:inline-flex;align-items:center;justify-content:center;padding:9px 12px;border-radius:7px;background:#0b2f5c;color:#fff;font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap}
+.pbh-image-manager-row input{display:none}
+.pbh-image-manager-footer{padding:14px 22px 18px;background:#f8fafc;color:#718198;font-size:10px;line-height:1.55}
+@media(max-width:900px){.pbh-showcase-head-right{display:block;max-width:420px}.pbh-image-manager-trigger{margin-top:12px}.pbh-showcase-grid-pro{grid-template-columns:1fr 1fr!important}.pbh-showcase-media{height:285px}}
+@media(max-width:620px){.pbh-showcase-pro{padding:88px 0 58px!important}.pbh-showcase-head-right{max-width:none}.pbh-showcase-grid-pro{grid-template-columns:1fr!important}.pbh-showcase-media{height:260px}.pbh-showcase-content-pro{padding:19px 20px 22px!important}.pbh-showcase-content-pro h3{font-size:20px!important}}
+</style>
+
 </head>
 <body>
 <header class="header"><div class="container nav">
@@ -2331,7 +2376,7 @@ img,svg,video,canvas,iframe{max-width:100%}
   <div class="trust" id="clientes"><h3>EMPRESAS QUE CONFÍAN EN NOSOTROS</h3><div class="client-window"><div class="client-track"><div class='client'><img src='assets/clients/client-01.svg' alt='Logo referencial de cliente'></div><div class='client'><img src='assets/clients/client-02.svg' alt='Logo referencial de cliente'></div><div class='client'><img src='assets/clients/client-03.svg' alt='Logo referencial de cliente'></div><div class='client'><img src='assets/clients/client-04.svg' alt='Logo referencial de cliente'></div><div class='client'><img src='assets/clients/client-05.svg' alt='Logo referencial de cliente'></div><div class='client'><img src='assets/clients/client-06.svg' alt='Logo referencial de cliente'></div><div class='client'><img src='assets/clients/client-07.svg' alt='Logo referencial de cliente'></div><div class='client'><img src='assets/clients/client-08.svg' alt='Logo referencial de cliente'></div><div class='client'><img src='assets/clients/client-09.svg' alt='Logo referencial de cliente'></div><div class='client'><img src='assets/clients/client-01.svg' alt='Logo referencial de cliente'></div><div class='client'><img src='assets/clients/client-02.svg' alt='Logo referencial de cliente'></div><div class='client'><img src='assets/clients/client-03.svg' alt='Logo referencial de cliente'></div><div class='client'><img src='assets/clients/client-04.svg' alt='Logo referencial de cliente'></div><div class='client'><img src='assets/clients/client-05.svg' alt='Logo referencial de cliente'></div><div class='client'><img src='assets/clients/client-06.svg' alt='Logo referencial de cliente'></div><div class='client'><img src='assets/clients/client-07.svg' alt='Logo referencial de cliente'></div><div class='client'><img src='assets/clients/client-08.svg' alt='Logo referencial de cliente'></div><div class='client'><img src='assets/clients/client-09.svg' alt='Logo referencial de cliente'></div></div></div><small>+25 empresas que ya transforman sus operaciones con nosotros</small></div>
 </section>
 
-<section class="pbh-visual-showcase" id="experiencias-visuales" aria-label="Experiencias visuales"><div class="container"><div class="pbh-showcase-head"><div><div class="pbh-showcase-kicker">Tecnología que se puede ver</div><h2>Del proceso a la solución. <span>Explórala.</span></h2></div><p>Presentamos visualmente nuestras capacidades de automatización, datos e inteligencia artificial. Haz clic en cada imagen para verla en grande.</p></div><div class="pbh-showcase-grid"><article class="pbh-showcase-card large" data-pbh-lightbox="assets/resources/automatizacion.jpg" data-title="Automatización inteligente" data-description="Power Automate, RPA e integración para transformar procesos repetitivos en flujos escalables."><img src="assets/resources/automatizacion.jpg" alt="Automatización inteligente y procesos digitales" loading="lazy"><span class="pbh-showcase-open" aria-hidden="true">↗</span><div class="pbh-showcase-content"><span class="pbh-showcase-label">AUTOMATIZACIÓN · RPA</span><h3>Procesos que trabajan contigo.</h3><p>Automatización inteligente para reducir tareas manuales, errores y tiempos de operación.</p></div></article><article class="pbh-showcase-card small" data-pbh-lightbox="assets/resources/data.jpg" data-title="Data &amp; Business Intelligence" data-description="Power BI y analítica para convertir información dispersa en decisiones accionables."><img src="assets/resources/data.jpg" alt="Data y Business Intelligence con Power BI" loading="lazy"><span class="pbh-showcase-open" aria-hidden="true">↗</span><div class="pbh-showcase-content"><span class="pbh-showcase-label">DATA · POWER BI</span><h3>Datos que cuentan una historia.</h3><p>Dashboards y analítica para ver lo que realmente importa.</p></div></article><article class="pbh-showcase-card small" data-pbh-lightbox="assets/resources/ia.jpg" data-title="IA aplicada al negocio" data-description="Copilot, agentes e inteligencia artificial aplicada a casos de uso reales."><img src="assets/resources/ia.jpg" alt="Inteligencia artificial aplicada al negocio" loading="lazy"><span class="pbh-showcase-open" aria-hidden="true">↗</span><div class="pbh-showcase-content"><span class="pbh-showcase-label">IA · COPILOT · AGENTES</span><h3>IA con propósito empresarial.</h3><p>Soluciones inteligentes diseñadas alrededor de objetivos concretos.</p></div></article></div><div class="pbh-showcase-hint">Puedes reemplazar estas tres imágenes por capturas reales de tus proyectos manteniendo la misma estructura.</div></div></section>
+<section class="pbh-visual-showcase pbh-showcase-pro" id="experiencias-visuales" aria-label="Tecnología que se puede ver"><div class="container"><div class="pbh-showcase-head"><div><div class="pbh-showcase-kicker">Tecnología que se puede ver</div><h2>Del proceso a la solución. <span>Explórala.</span></h2></div><div class="pbh-showcase-head-right"><p>Una mirada visual a las capacidades que ponemos al servicio de la transformación: automatización, datos e inteligencia artificial.</p><button class="pbh-image-manager-trigger" id="pbhImageManagerTrigger" type="button">Personalizar imágenes</button></div></div><div class="pbh-showcase-grid pbh-showcase-grid-pro"><article class="pbh-showcase-card pbh-showcase-card-pro" data-image-key="automatizacion" data-pbh-lightbox="assets/resources/automatizacion.jpg" data-title="Automatización inteligente" data-description="Power Automate, RPA e integración para transformar procesos repetitivos en flujos escalables."><div class="pbh-showcase-media"><img src="assets/resources/automatizacion.jpg" alt="Automatización inteligente y procesos digitales" loading="lazy"><span class="pbh-showcase-index">01</span><span class="pbh-showcase-expand">Ver en grande</span></div><div class="pbh-showcase-content pbh-showcase-content-pro"><span class="pbh-showcase-label">AUTOMATIZACIÓN · RPA</span><h3>Procesos que trabajan contigo.</h3><p>Automatización inteligente para reducir tareas manuales, errores y tiempos de operación.</p></div></article><article class="pbh-showcase-card pbh-showcase-card-pro" data-image-key="data" data-pbh-lightbox="assets/resources/data.jpg" data-title="Data &amp; Business Intelligence" data-description="Power BI y analítica para convertir información dispersa en decisiones accionables."><div class="pbh-showcase-media"><img src="assets/resources/data.jpg" alt="Data y Business Intelligence con Power BI" loading="lazy"><span class="pbh-showcase-index">02</span><span class="pbh-showcase-expand">Ver en grande</span></div><div class="pbh-showcase-content pbh-showcase-content-pro"><span class="pbh-showcase-label">DATA · POWER BI</span><h3>Datos que cuentan una historia.</h3><p>Dashboards y analítica para ver lo que realmente importa.</p></div></article><article class="pbh-showcase-card pbh-showcase-card-pro" data-image-key="ia" data-pbh-lightbox="assets/resources/ia.jpg" data-title="IA aplicada al negocio" data-description="Copilot, agentes e inteligencia artificial aplicada a casos de uso reales."><div class="pbh-showcase-media"><img src="assets/resources/ia.jpg" alt="Inteligencia artificial aplicada al negocio" loading="lazy"><span class="pbh-showcase-index">03</span><span class="pbh-showcase-expand">Ver en grande</span></div><div class="pbh-showcase-content pbh-showcase-content-pro"><span class="pbh-showcase-label">IA · COPILOT · AGENTES</span><h3>IA con propósito empresarial.</h3><p>Soluciones inteligentes diseñadas alrededor de objetivos concretos.</p></div></article></div><div class="pbh-showcase-hint">Haz clic en una imagen para verla en grande. Puedes reemplazar las imágenes por capturas reales de tus proyectos.</div></div></section>
 
 <section class="metrics"><div class="container metrics-grid">
 <div class="metric"><div class="metric-icon"><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M4 17l5-5 4 3 7-8M15 7h5v5'/></svg></div><div><b>+65%</b><h4>Eficiencia operativa</h4><p>Procesos más ágiles y equipos enfocados en lo que realmente importa.</p></div></div>
@@ -2766,6 +2811,7 @@ img,svg,video,canvas,iframe{max-width:100%}
 
 
 
+<div class="pbh-image-manager" id="pbhImageManager" role="dialog" aria-modal="true" aria-label="Personalizar imágenes"><div class="pbh-image-manager-panel"><div class="pbh-image-manager-head"><div><h3>Personalizar imágenes</h3><p>Carga tus propias capturas, dashboards o proyectos para reemplazar los visuales.</p></div><button class="pbh-image-manager-close" id="pbhImageManagerClose" type="button" aria-label="Cerrar">×</button></div><div class="pbh-image-manager-list"><div class="pbh-image-manager-row"><div><strong>01 · Automatización / RPA</strong><small>Recomendado: JPG, PNG o WEBP · imagen horizontal</small></div><label>Seleccionar imagen<input type="file" accept="image/png,image/jpeg,image/webp" data-pbh-upload="automatizacion"></label></div><div class="pbh-image-manager-row"><div><strong>02 · Data / Power BI</strong><small>Recomendado: JPG, PNG o WEBP · imagen horizontal</small></div><label>Seleccionar imagen<input type="file" accept="image/png,image/jpeg,image/webp" data-pbh-upload="data"></label></div><div class="pbh-image-manager-row"><div><strong>03 · IA / Copilot / Agentes</strong><small>Recomendado: JPG, PNG o WEBP · imagen horizontal</small></div><label>Seleccionar imagen<input type="file" accept="image/png,image/jpeg,image/webp" data-pbh-upload="ia"></label></div></div><div class="pbh-image-manager-footer">Las imágenes cargadas desde aquí se guardan en este navegador mediante almacenamiento local. Para que los cambios sean visibles para todos los visitantes del sitio, reemplaza también las imágenes de la carpeta <strong>assets/resources/</strong> al publicar.</div></div></div>
 <div class="pbh-lightbox" id="pbhLightbox" role="dialog" aria-modal="true" aria-label="Vista ampliada de imagen"><div class="pbh-lightbox-panel"><button class="pbh-lightbox-close" id="pbhLightboxClose" type="button" aria-label="Cerrar">×</button><img id="pbhLightboxImage" src="" alt=""><div class="pbh-lightbox-caption"><strong id="pbhLightboxTitle"></strong><span id="pbhLightboxDescription"></span></div></div></div>
 <footer class="footer" id="contacto"><div class="container footer-grid">
 <div class="footer-brand"><a class="brand" href="#inicio"><span class="wordmark"><span class="presencia-logo" aria-label="PRESENCIA"></span><span class="business">&nbsp;BUSINESS HUB</span></span></a><p class="footer-desc">Automatizaciones que impulsa resultados y transforma negocios.</p><div class="socials"><a class="social" href="https://www.linkedin.com/company/144814387" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn PRESENCIA Business Hub">in</a><span class="social">▶</span><a class="social" href="https://outlook.office.com/mail/deeplink/compose?to=ventas%40presencia.pe&subject=Deseo%20automatizar%20uno%20de%20mis%20procesos" target="_blank" rel="noopener noreferrer" aria-label="Enviar correo a ventas@presencia.pe">✉</a></div></div>
@@ -4339,5 +4385,43 @@ function closeModal(id){
 })();
 </script>
 
-<script>document.addEventListener('DOMContentLoaded',function(){const b=document.getElementById('pbhHeroFreePlan');const target=document.getElementById('pbhProjectGrid');if(b&&target){const go=()=>{target.scrollIntoView({behavior:'smooth',block:'start'});target.classList.add('pbh-free-target-focus');setTimeout(()=>target.classList.remove('pbh-free-target-focus'),1200);};b.addEventListener('click',go);b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});}});</script><script id="pbh-final-lightbox">(function(){function init(){const box=document.getElementById('pbhLightbox'),image=document.getElementById('pbhLightboxImage'),title=document.getElementById('pbhLightboxTitle'),desc=document.getElementById('pbhLightboxDescription'),close=document.getElementById('pbhLightboxClose');if(!box||!image||!close)return;document.querySelectorAll('[data-pbh-lightbox]').forEach(card=>{card.addEventListener('click',()=>{image.src=card.dataset.pbhLightbox;image.alt=card.querySelector('img')?.alt||card.dataset.title||'';title.textContent=card.dataset.title||'';desc.textContent=card.dataset.description||'';box.classList.add('is-open');document.body.style.overflow='hidden';close.focus()})});function hide(){box.classList.remove('is-open');image.src='';document.body.style.overflow=''}close.addEventListener('click',hide);box.addEventListener('click',e=>{if(e.target===box)hide()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&box.classList.contains('is-open'))hide()})}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init()})();</script>
+<script>document.addEventListener('DOMContentLoaded',function(){const b=document.getElementById('pbhHeroFreePlan');const target=document.getElementById('pbhProjectGrid');if(b&&target){const go=()=>{target.scrollIntoView({behavior:'smooth',block:'start'});target.classList.add('pbh-free-target-focus');setTimeout(()=>target.classList.remove('pbh-free-target-focus'),1200);};b.addEventListener('click',go);b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});}});</script><script id="pbh-showcase-upload-manager">
+(function(){
+  const keys=['automatizacion','data','ia'];
+  const manager=document.getElementById('pbhImageManager');
+  const trigger=document.getElementById('pbhImageManagerTrigger');
+  const close=document.getElementById('pbhImageManagerClose');
+  if(!manager||!trigger)return;
+  const cards=[...document.querySelectorAll('.pbh-showcase-card-pro[data-image-key]')];
+  function setImage(key,src){
+    const card=cards.find(c=>c.dataset.imageKey===key); if(!card)return;
+    const img=card.querySelector('img'); if(img) img.src=src;
+    card.dataset.pbhLightbox=src;
+  }
+  keys.forEach(key=>{
+    try{const saved=localStorage.getItem('pbh_showcase_'+key);if(saved)setImage(key,saved)}catch(e){}
+  });
+  function open(){manager.classList.add('is-open');document.body.style.overflow='hidden';}
+  function hide(){manager.classList.remove('is-open');document.body.style.overflow='';}
+  trigger.addEventListener('click',open);
+  close&&close.addEventListener('click',hide);
+  manager.addEventListener('click',e=>{if(e.target===manager)hide()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&manager.classList.contains('is-open'))hide()});
+  manager.querySelectorAll('input[data-pbh-upload]').forEach(input=>{
+    input.addEventListener('change',()=>{
+      const file=input.files&&input.files[0]; if(!file)return;
+      if(!file.type.startsWith('image/'))return;
+      const reader=new FileReader();
+      reader.onload=()=>{
+        const src=reader.result;
+        setImage(input.dataset.pbhUpload,src);
+        try{localStorage.setItem('pbh_showcase_'+input.dataset.pbhUpload,src)}catch(e){}
+        input.value='';
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+})();
+</script>
+<script id="pbh-final-lightbox">(function(){function init(){const box=document.getElementById('pbhLightbox'),image=document.getElementById('pbhLightboxImage'),title=document.getElementById('pbhLightboxTitle'),desc=document.getElementById('pbhLightboxDescription'),close=document.getElementById('pbhLightboxClose');if(!box||!image||!close)return;document.querySelectorAll('[data-pbh-lightbox]').forEach(card=>{card.addEventListener('click',()=>{image.src=card.dataset.pbhLightbox;image.alt=card.querySelector('img')?.alt||card.dataset.title||'';title.textContent=card.dataset.title||'';desc.textContent=card.dataset.description||'';box.classList.add('is-open');document.body.style.overflow='hidden';close.focus()})});function hide(){box.classList.remove('is-open');image.src='';document.body.style.overflow=''}close.addEventListener('click',hide);box.addEventListener('click',e=>{if(e.target===box)hide()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&box.classList.contains('is-open'))hide()})}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init()})();</script>
 </body></html>
