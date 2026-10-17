@@ -2531,44 +2531,20 @@ img,svg,video,canvas,iframe{max-width:100%}
 </style>
 
 
-<style id="pbh-background-music-style">
-  .pbh-music-control{
-    position:fixed;
-    right:22px;
-    bottom:22px;
-    z-index:9999;
-    width:44px;
-    height:44px;
-    border:1px solid rgba(255,255,255,.22);
-    border-radius:50%;
-    background:rgba(6,17,31,.88);
-    color:#fff;
-    display:grid;
-    place-items:center;
-    cursor:pointer;
-    box-shadow:0 10px 28px rgba(0,0,0,.22);
-    backdrop-filter:blur(12px);
-    -webkit-backdrop-filter:blur(12px);
-    transition:transform .2s ease,background .2s ease,border-color .2s ease;
-  }
-  .pbh-music-control:hover{transform:translateY(-2px);background:rgba(12,34,59,.96);border-color:rgba(87,180,255,.6)}
-  .pbh-music-control:active{transform:scale(.96)}
-  .pbh-music-control svg{width:20px;height:20px;stroke:currentColor}
-  .pbh-music-control.is-playing{border-color:rgba(255,106,0,.8);box-shadow:0 10px 30px rgba(255,106,0,.18)}
-  .pbh-music-control .music-off{display:none}
-  .pbh-music-control.is-muted .music-on{display:none}
-  .pbh-music-control.is-muted .music-off{display:block}
-  @media(max-width:760px){.pbh-music-control{right:15px;bottom:15px;width:42px;height:42px}}
+<!-- PBH MUSIC START -->
+<style id="pbh-music-controls">
+#pbhMusicAudio{display:none;}
+.pbh-music-control{position:fixed;right:24px;bottom:108px;z-index:500;display:flex;align-items:center;gap:8px;}
+.pbh-music-button{border:1px solid rgba(255,255,255,.28);background:rgba(7,25,48,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;border-radius:999px;padding:10px 14px;min-height:42px;font:600 12px/1 Arial,sans-serif;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.24),0 0 0 1px rgba(0,153,255,.08);transition:.2s ease;display:flex;align-items:center;gap:7px;}
+.pbh-music-button:hover{transform:translateY(-2px);background:rgba(10,35,65,.97);}
+.pbh-music-button.is-playing{border-color:rgba(37,211,102,.5);}
+.pbh-music-button .pbh-music-dot{width:7px;height:7px;border-radius:50%;background:#8a98aa;box-shadow:0 0 0 0 rgba(37,211,102,0);}
+.pbh-music-button.is-playing .pbh-music-dot{background:#25D366;box-shadow:0 0 0 5px rgba(37,211,102,.10);}
+@media(max-width:760px){.pbh-music-control{right:13px;bottom:88px}.pbh-music-button{padding:9px 12px;font-size:11px;min-height:40px;}}
 </style>
+<!-- PBH MUSIC END -->
 </head>
 <body>
-<!-- Música ambiental Presencia Business Hub -->
-<audio id="pbhBackgroundMusic" src="assets/musica-tecnologica.mp3" loop preload="auto"></audio>
-<button id="pbhMusicControl" class="pbh-music-control is-muted" type="button" aria-label="Activar música" title="Activar música">
-  <svg class="music-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg>
-  <svg class="music-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/><path d="m4 4 16 16"/></svg>
-</button>
-
 <header class="header"><div class="container nav">
 <a class="brand brand-header no-brand-icon" href="#inicio"><span class="wordmark"><span class="presencia-logo" aria-label="PRESENCIA"></span><span class="business">&nbsp;BUSINESS HUB</span></span></a>
 <nav class="navlinks"><a class="active" href="#inicio">Inicio</a><a href="#soluciones">Soluciones</a><a href="#microsoft">Microsoft</a><a href="#casos">Casos de éxito</a><a href="#nosotros">Nosotros</a><a href="#recursos">Insights</a><a href="#formulario-contacto">Contacto</a></nav>
@@ -4700,73 +4676,55 @@ function closeModal(id){
 })();
 </script>
 
-<script id="pbh-background-music-script">
+<!-- PBH MUSIC START -->
+<audio id="pbhMusicAudio" src="assets/musica-tecnologica.mp3" loop preload="auto" playsinline></audio>
+<div class="pbh-music-control" id="pbhMusicControl">
+  <button type="button" class="pbh-music-button" id="pbhMusicButton" aria-label="Activar sonido">
+    <span class="pbh-music-dot"></span><span id="pbhMusicLabel">🎵 Activar sonido</span>
+  </button>
+</div>
+<script>
 (function(){
-  const audio=document.getElementById('pbhBackgroundMusic');
-  const control=document.getElementById('pbhMusicControl');
-  if(!audio||!control)return;
-
-  const TARGET_VOLUME=0.15;
+  const audio=document.getElementById('pbhMusicAudio');
+  const btn=document.getElementById('pbhMusicButton');
+  const label=document.getElementById('pbhMusicLabel');
+  if(!audio||!btn)return;
   let fadeTimer=null;
-
-  audio.volume=0;
-  audio.loop=true;
-
-  function updateUI(playing){
-    control.classList.toggle('is-playing',playing);
-    control.classList.toggle('is-muted',!playing);
-    control.setAttribute('aria-label',playing?'Pausar música':'Activar música');
-    control.title=playing?'Pausar música':'Activar música';
+  const TARGET=.15;
+  function setState(playing){
+    btn.classList.toggle('is-playing',playing);
+    btn.setAttribute('aria-label',playing?'Pausar música':'Activar sonido');
+    label.textContent=playing?'🔊 Sonido ON':'🎵 Activar sonido';
   }
-
   function fadeIn(){
-    clearInterval(fadeTimer);
+    if(fadeTimer)clearInterval(fadeTimer);
     audio.volume=0;
-    const duration=3000;
-    const steps=30;
-    const increment=TARGET_VOLUME/steps;
-    let step=0;
+    const steps=30; let n=0;
     fadeTimer=setInterval(function(){
-      step++;
-      audio.volume=Math.min(TARGET_VOLUME,increment*step);
-      if(step>=steps){clearInterval(fadeTimer);fadeTimer=null;}
-    },duration/steps);
+      n++; audio.volume=Math.min(TARGET,TARGET*n/steps);
+      if(n>=steps){clearInterval(fadeTimer);fadeTimer=null;}
+    },100);
   }
-
   async function playMusic(){
     try{
+      audio.volume=0;
       await audio.play();
       fadeIn();
-      updateUI(true);
-    }catch(e){
-      updateUI(false);
+      setState(true);
+      return true;
+    }catch(err){
+      setState(false);
+      return false;
     }
   }
-
-  function pauseMusic(){
-    clearInterval(fadeTimer);
-    audio.pause();
-    audio.volume=0;
-    updateUI(false);
-  }
-
-  control.addEventListener('click',function(){
-    if(audio.paused) playMusic();
-    else pauseMusic();
+  btn.addEventListener('click',async function(){
+    if(!audio.paused){audio.pause();setState(false);return;}
+    await playMusic();
   });
-
-  window.addEventListener('load',function(){
-    setTimeout(playMusic,350);
-  });
-
-  // Si el navegador bloquea autoplay, el primer clic/tap en la página activa la música.
-  function firstInteraction(){
-    if(audio.paused) playMusic();
-    window.removeEventListener('pointerdown',firstInteraction);
-    window.removeEventListener('keydown',firstInteraction);
-  }
-  window.addEventListener('pointerdown',firstInteraction,{once:true,passive:true});
-  window.addEventListener('keydown',firstInteraction,{once:true});
+  window.addEventListener('load',function(){setTimeout(playMusic,500);},{once:true});
+  audio.addEventListener('ended',function(){setState(false);});
+  audio.addEventListener('error',function(){setState(false);});
 })();
 </script>
+<!-- PBH MUSIC END -->
 </body></html>
