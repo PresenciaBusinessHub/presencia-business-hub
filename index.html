@@ -2533,7 +2533,7 @@ img,svg,video,canvas,iframe{max-width:100%}
 
 <!-- PBH MUSIC START -->
 <style id="pbh-music-controls">
-#pbhMusicAudio{display:none;}
+#musicaFondo{display:none;}
 .pbh-music-control{position:fixed;right:24px;bottom:155px;z-index:500;display:flex;align-items:center;gap:8px;}
 .pbh-music-button{border:1px solid rgba(255,255,255,.28);background:rgba(7,25,48,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;border-radius:999px;padding:10px 14px;min-height:42px;font:600 12px/1 Arial,sans-serif;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.24),0 0 0 1px rgba(0,153,255,.08);transition:.2s ease;display:flex;align-items:center;gap:7px;}
 .pbh-music-button:hover{transform:translateY(-2px);background:rgba(10,35,65,.97);}
@@ -2561,7 +2561,6 @@ img,svg,video,canvas,iframe{max-width:100%}
 <section class="hero" id="inicio">
   <div class="hero-video-layer" aria-hidden="true">
     <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="assets/banner3.png">
-      <source src="assets/hero-pbh.mp4" type="video/mp4">
     </video>
   </div>
   
@@ -4677,7 +4676,7 @@ function closeModal(id){
 </script>
 
 <!-- PBH MUSIC START -->
-<audio id="pbhMusicAudio" src="assets/musica-tecnologica.mp3" loop preload="auto" playsinline autoplay></audio>
+<audio id="musicaFondo" src="assets/musica-tecnologica.mp3" loop preload="auto" playsinline></audio>
 <div class="pbh-music-control" id="pbhMusicControl">
   <button type="button" class="pbh-music-button" id="pbhMusicButton" aria-label="Activar sonido">
     <span class="pbh-music-dot"></span><span id="pbhMusicLabel">🎵 Activar sonido</span>
@@ -4685,12 +4684,23 @@ function closeModal(id){
 </div>
 <script>
 (function(){
-  const audio=document.getElementById('pbhMusicAudio');
+  const audio=document.getElementById('musicaFondo');
   const btn=document.getElementById('pbhMusicButton');
   const label=document.getElementById('pbhMusicLabel');
   if(!audio||!btn)return;
   let fadeTimer=null;
   const TARGET=.15;
+  audio.volume=0;
+  window.pbhMusicTest = function(){
+    return {
+      encontrado: !!audio,
+      src: audio.currentSrc,
+      paused: audio.paused,
+      readyState: audio.readyState,
+      volume: audio.volume
+    };
+  };
+
   function setState(playing){
     btn.classList.toggle('is-playing',playing);
     btn.setAttribute('aria-label',playing?'Pausar música':'Activar sonido');
