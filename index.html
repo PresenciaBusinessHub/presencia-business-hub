@@ -4677,7 +4677,7 @@ function closeModal(id){
 </script>
 
 <!-- PBH MUSIC START -->
-<audio id="pbhMusicAudio" src="assets/musica-tecnologica.mp3" loop preload="auto" playsinline></audio>
+<audio id="pbhMusicAudio" src="assets/musica-tecnologica.mp3" loop preload="auto" playsinline autoplay></audio>
 <div class="pbh-music-control" id="pbhMusicControl">
   <button type="button" class="pbh-music-button" id="pbhMusicButton" aria-label="Activar sonido">
     <span class="pbh-music-dot"></span><span id="pbhMusicLabel">🎵 Activar sonido</span>
@@ -4721,7 +4721,17 @@ function closeModal(id){
     if(!audio.paused){audio.pause();setState(false);return;}
     await playMusic();
   });
-  window.addEventListener('load',function(){setTimeout(playMusic,500);},{once:true});
+  // Intento inmediato al entrar a la web. Si el navegador permite autoplay con sonido, empieza solo.
+  // Algunos navegadores bloquean el audio audible hasta que el visitante interactúa; en ese caso el botón queda disponible.
+  function startOnEntry(){ playMusic(); }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',startOnEntry,{once:true});
+  }else{
+    startOnEntry();
+  }
+  window.addEventListener('load',function(){
+    if(audio.paused) playMusic();
+  },{once:true});
   audio.addEventListener('ended',function(){setState(false);});
   audio.addEventListener('error',function(){setState(false);});
 })();
