@@ -4690,7 +4690,7 @@ function closeModal(id){
   const label=document.getElementById('pbhMusicLabel');
   if(!audio||!btn)return;
   let fadeTimer=null;
-  const TARGET=.5;
+  const TARGET=.075;
   audio.volume=0;
   window.pbhMusicTest = function(){
     return {
